@@ -1,14 +1,6 @@
-import Fastify from "fastify";
+import { buildApp } from "./app.js";
 
-const app = Fastify({
-  logger: true,
-});
-
-app.get("/api/health", async () => {
-  return {
-    status: "ok",
-  };
-});
+const app = buildApp();
 
 async function start(): Promise<void> {
   try {
