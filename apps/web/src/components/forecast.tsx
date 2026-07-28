@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getCroydeForecast } from "../lib/api-client";
 import type { ForecastResponse } from "../schemas/forecast";
+import { getNextForecast } from "../lib/forecast";
 
 export function ForecastSummary() {
   const [data, setData] = useState<ForecastResponse | null>(null);
@@ -22,18 +23,18 @@ export function ForecastSummary() {
     return <p>Loading forecast...</p>;
   }
 
-  const firstForecast = data.forecast[0];
+  const currentForecast = getNextForecast(data.forecast);
 
-  if (!firstForecast) {
+  if (!currentForecast) {
     return <p>No forecast available.</p>;
   }
 
   return (
     <section>
       <h2>{data.spot.name}</h2>
-      <p>Wave height: {firstForecast.waveHeight ?? "Unknown"} m</p>
-      <p>Wave period: {firstForecast.wavePeriod ?? "Unknown"} s</p>
-      <p>Direction: {firstForecast.waveDirection ?? "Unknown"}°</p>
+      <p>Wave height: {currentForecast.waveHeight ?? "Unknown"} m</p>
+      <p>Wave period: {currentForecast.wavePeriod ?? "Unknown"} s</p>
+      <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
     </section>
   );
 }

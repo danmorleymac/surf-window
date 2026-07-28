@@ -1,3 +1,5 @@
+// apps/web/src/schemas/forecast.ts
+
 import { z } from "zod";
 
 export const ForecastHourSchema = z.object({
@@ -6,6 +8,8 @@ export const ForecastHourSchema = z.object({
   wavePeriod: z.number().nullable(),
   waveDirection: z.number().nullable(),
 });
+
+export type ForecastHour = z.infer<typeof ForecastHourSchema>;
 
 export const ForecastResponseSchema = z.object({
   spot: z.object({
