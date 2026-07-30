@@ -1,40 +1,81 @@
-import { useEffect, useState } from "react";
-import { getCroydeForecast } from "../lib/api-client";
-import type { ForecastResponse } from "../schemas/forecast";
-import { getNextForecast } from "../lib/forecast";
+import { useQuery } from "@tanstack/react-query";
 
-export function ForecastSummary() {
-  const [data, setData] = useState<ForecastResponse | null>(null);
-  const [error, setError] = useState<string | null>(null);
+import { getNextForecast, getRemainingForecastsToday } from "../lib/forecast";
+import { croydeForecastQueryOptions } from "../query-options/forecast";
+import { HourlyForecast } from "./hourlyforecast";
 
-  useEffect(() => {
-    getCroydeForecast()
-      .then(setData)
-      .catch((err: unknown) => {
-        setError(err instanceof Error ? err.message : "Unable to load forecast");
-      });
-  }, []);
 
-  if (error) {
-    return <p>{error}</p>;
-  }
+export function Forecast() {
+  const {
+    data,
+    error,
+    isPending,
+    isFetching,
+    refetch,
+  } = useQuery(croydeForecastQueryOptions);
 
-  if (!data) {
+  if (isPending) {
     return <p>Loading forecast...</p>;
   }
 
-  const currentForecast = getNextForecast(data.forecast);
+  if (error) {
+    return (
+      <section>
+        <p>
+          {error instanceof Error
+            ? error.message
+            : "Unable to load forecast"}
+        </p>
 
+        <button type="button" onClick={() => void refetch()}>
+          Try again
+        </button>
+      </section>
+    );
+  }
+
+  const currentForecast = getNextForecast(data.forecast);
+  const remainingForecasts = getRemainingForecastsToday(data.forecast);
+  
   if (!currentForecast) {
-    return <p>No forecast available.</p>;
+    return <p>No upcoming forecast available.</p>;
   }
 
   return (
+    <>
     <section>
       <h2>{data.spot.name}</h2>
-      <p>Wave height: {currentForecast.waveHeight ?? "Unknown"} m</p>
-      <p>Wave period: {currentForecast.wavePeriod ?? "Unknown"} s</p>
-      <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
+
+      {isFetching && <p>Refreshing...</p>}
+
+      <p>
+        Forecast for{" "}
+        {new Date(currentForecast.time).toLocaleString("en-GB", {
+          weekday: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+        })}
+      </p>
+
+      <p>
+        Wave height: {currentForecast.waveHeight ?? "Unknown"} m
+      </p>
+
+      <p>
+        Wave period: {currentForecast.wavePeriod ?? "Unknown"} s
+      </p>
+
+      <p>
+        Direction: {currentForecast.waveDirection ?? "Unknown"}°
+      </p>
+
+      <button type="button" onClick={() => void refetch()}>
+        Refresh
+      </button>
     </section>
+    <section>
+      <HourlyForecast forecast={remainingForecasts} />
+    </section>
+    </> 
   );
 }
