@@ -1,18 +1,25 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getNextForecast, getRemainingForecastsToday } from "../lib/forecast";
-import { croydeForecastQueryOptions } from "../query-options/forecast";
+import {
+  getNextForecast,
+  getRemainingForecastsToday,
+} from "../lib/forecast";
+import { forecastQueryOptions } from "../query-options/forecast";
 import { HourlyForecast } from "./hourlyforecast";
+import type { SpotId } from "../data/spots";
 
+type ForecastProps = {
+  spotId: SpotId;
+};
 
-export function Forecast() {
+export function Forecast({ spotId }: ForecastProps) {
   const {
     data,
     error,
     isPending,
     isFetching,
     refetch,
-  } = useQuery(croydeForecastQueryOptions);
+  } = useQuery(forecastQueryOptions(spotId));
 
   if (isPending) {
     return <p>Loading forecast...</p>;
@@ -35,47 +42,47 @@ export function Forecast() {
   }
 
   const currentForecast = getNextForecast(data.forecast);
-  const remainingForecasts = getRemainingForecastsToday(data.forecast);
-  
+  const remainingForecasts =
+    getRemainingForecastsToday(data.forecast);
+
   if (!currentForecast) {
     return <p>No upcoming forecast available.</p>;
   }
 
   return (
     <>
-    <section>
-      <h2>{data.spot.name}</h2>
+      <section>
+        <h2>{data.spot.name}</h2>
 
-      {isFetching && <p>Refreshing...</p>}
+        {isFetching && <p>Refreshing...</p>}
 
-      <p>
-        Forecast for{" "}
-        {new Date(currentForecast.time).toLocaleString("en-GB", {
-          weekday: "short",
-          hour: "2-digit",
-          minute: "2-digit",
-        })}
-      </p>
+        <p>
+          Forecast for{" "}
+          {new Date(currentForecast.time).toLocaleString("en-GB", {
+            weekday: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+          })}
+        </p>
 
-      <p>
-        Wave height: {currentForecast.waveHeight ?? "Unknown"} m
-      </p>
+        <p>
+          Wave height: {currentForecast.waveHeight ?? "Unknown"} m
+        </p>
 
-      <p>
-        Wave period: {currentForecast.wavePeriod ?? "Unknown"} s
-      </p>
+        <p>
+          Wave period: {currentForecast.wavePeriod ?? "Unknown"} s
+        </p>
 
-      <p>
-        Direction: {currentForecast.waveDirection ?? "Unknown"}°
-      </p>
+        <p>
+          Direction: {currentForecast.waveDirection ?? "Unknown"}°
+        </p>
 
-      <button type="button" onClick={() => void refetch()}>
-        Refresh
-      </button>
-    </section>
-    <section>
+        <button type="button" onClick={() => void refetch()}>
+          Refresh
+        </button>
+      </section>
+
       <HourlyForecast forecast={remainingForecasts} />
-    </section>
-    </> 
+    </>
   );
 }

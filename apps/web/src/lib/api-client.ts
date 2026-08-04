@@ -19,11 +19,13 @@ export async function getHealth(): Promise<HealthResponse> {
   return healthResponseSchema.parse(data);
 }
 
-export async function getCroydeForecast() {
-  const response = await fetch("/api/spots/croyde/forecast");
+export async function getSpotForecast(spotId: string) {
+  const response = await fetch(`/api/spots/${spotId}/forecast`);
 
   if (!response.ok) {
-    throw new Error(`Forecast request failed: ${response.status}`);
+    throw new Error(
+      `Forecast request failed with status ${response.status}`,
+    );
   }
 
   const data: unknown = await response.json();
