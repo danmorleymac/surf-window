@@ -1,8 +1,8 @@
 import { buildApp } from "./app.js";
 
-const app = buildApp();
-
 async function start(): Promise<void> {
+  const app = await buildApp();
+
   try {
     await app.listen({
       port: 3001,

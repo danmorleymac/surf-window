@@ -20,6 +20,8 @@ export function registerForecastRoutes(app: FastifyInstance): void {
     "/api/spots/:spotId/forecast",
     {
       schema: {
+        tags: ["Forecast"],
+        summary: "Get the marine forecast for a surf spot",
         params: toFastifySchema(SpotParamsSchema),
         response: {
           200: toFastifySchema(ForecastResponseSchema),
