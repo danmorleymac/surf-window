@@ -1,23 +1,30 @@
 # Surf Window
 
-A full-stack surf forecasting application built to refresh and expand my engineering skills.
+A React + Fastify application that displays live surf forecasts from Open-Meteo.
 
-## Goals
-
-- Modern React + TypeScript
-- Node backend
-- REST API
-- Docker
-- CI/CD
-- Azure deployment
-- AI-assisted development using Cursor
-
-## Tech
+## Stack
 
 - React
-- Vite
 - Fastify
 - TypeScript
-- GitHub Actions
-- Docker
-- Azure
+- Zod
+- TanStack Query
+- Vitest
+
+## Running
+
+npm install
+
+npm run dev
+
+## Architecture
+
+Frontend
+
+↓
+
+Backend
+
+↓
+
+Open-Meteo
