@@ -5,16 +5,22 @@ import swaggerUi from "@fastify/swagger-ui";
 import { registerForecastRoutes } from "./routes/forecast.js";
 import { registerHealthRoutes } from "./routes/health.js";
 
-export async function buildApp() {
+type BuildAppOptions = {
+  logger?: boolean;
+};
+
+export async function buildApp({
+  logger = true,
+}: BuildAppOptions = {}) {
   const app = Fastify({
-    logger: true,
+    logger,
   });
 
   await app.register(swagger, {
     openapi: {
       info: {
         title: "Surf Window API",
-        description: "API for retrieving surf forecasts",
+        description: "API for surf spot marine forecasts",
         version: "1.0.0",
       },
     },
