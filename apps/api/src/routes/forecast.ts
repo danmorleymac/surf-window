@@ -2,10 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import { getSpotById } from "../data/spots";
-import {
-  ForecastErrorSchema,
-  ForecastResponseSchema,
-} from "../schemas/forecast";
+import { ForecastErrorSchema, ForecastResponseSchema } from "../schemas/forecast";
 import { toFastifySchema } from "../schemas/to-fastify-schema";
 import { getForecastForSpot } from "../services/forecastService";
 
@@ -40,15 +37,7 @@ export function registerForecastRoutes(app: FastifyInstance): void {
         });
       }
 
-      try {
-        return await getForecastForSpot(spot);
-      } catch (error) {
-        app.log.error(error);
-
-        return reply.status(502).send({
-          error: "Unable to retrieve marine forecast",
-        });
-      }
-    },
+      return getForecastForSpot(spot);
+    }
   );
 }

@@ -4,14 +4,13 @@ import swaggerUi from "@fastify/swagger-ui";
 
 import { registerForecastRoutes } from "./routes/forecast.js";
 import { registerHealthRoutes } from "./routes/health.js";
+import { errorHandler } from "./errors/error-handler.js";
 
 type BuildAppOptions = {
   logger?: boolean;
 };
 
-export async function buildApp({
-  logger = true,
-}: BuildAppOptions = {}) {
+export async function buildApp({ logger = true }: BuildAppOptions = {}) {
   const app = Fastify({
     logger,
   });
@@ -29,6 +28,8 @@ export async function buildApp({
   await app.register(swaggerUi, {
     routePrefix: "/documentation",
   });
+
+  app.setErrorHandler(errorHandler);
 
   registerHealthRoutes(app);
   registerForecastRoutes(app);

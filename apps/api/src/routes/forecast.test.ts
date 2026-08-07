@@ -1,12 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildApp } from "../app.js";
 import { fetchMarineForecast } from "../clients/open-meteo-client.js";
@@ -43,13 +36,25 @@ describe("GET /api/spots/:spotId/forecast", () => {
     });
   });
 
+  it("returns 502 when the marine forecast service fails", async () => {
+    mockedFetchMarineForecast.mockRejectedValue(new Error("Open-Meteo unavailable"));
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/spots/croyde/forecast",
+    });
+
+    expect(response.statusCode).toBe(502);
+
+    expect(response.json()).toEqual({
+      error: "Unable to retrieve marine forecast",
+    });
+  });
+
   it("returns a forecast for Croyde", async () => {
     mockedFetchMarineForecast.mockResolvedValue({
       hourly: {
-        time: [
-          "2026-08-06T12:00",
-          "2026-08-06T13:00",
-        ],
+        time: ["2026-08-06T12:00", "2026-08-06T13:00"],
         wave_height: [1.2, 1.3],
         wave_period: [9, 9.5],
         wave_direction: [275, 280],
@@ -87,9 +92,6 @@ describe("GET /api/spots/:spotId/forecast", () => {
     });
 
     expect(mockedFetchMarineForecast).toHaveBeenCalledOnce();
-    expect(mockedFetchMarineForecast).toHaveBeenCalledWith(
-      51.13,
-      -4.24,
-    );
+    expect(mockedFetchMarineForecast).toHaveBeenCalledWith(51.13, -4.24);
   });
 });
