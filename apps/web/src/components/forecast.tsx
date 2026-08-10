@@ -5,7 +5,7 @@ import {
   getRemainingForecastsToday,
 } from "../lib/forecast";
 import { forecastQueryOptions } from "../query-options/forecast";
-import { HourlyForecast } from "./hourlyforecast";
+import { HourlyForecast } from "./hourly-forecast";
 import type { SpotId } from "../data/spots";
 
 type ForecastProps = {

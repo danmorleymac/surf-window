@@ -4,7 +4,7 @@ import { z } from "zod";
 import { getSpotById } from "../data/spots";
 import { ForecastErrorSchema, ForecastResponseSchema } from "../schemas/forecast";
 import { toFastifySchema } from "../schemas/to-fastify-schema";
-import { getForecastForSpot } from "../services/forecastService";
+import { getForecastForSpot } from "../services/forecast-service";
 
 const SpotParamsSchema = z.object({
   spotId: z.string(),
