@@ -15,6 +15,8 @@ const EnvSchema = z.object({
 
   HOST: z.string().default("0.0.0.0"),
 
+  DATABASE_URL: z.url(),
+
   OPEN_METEO_BASE_URL: z
     .url()
     .default("https://marine-api.open-meteo.com/v1/marine"),

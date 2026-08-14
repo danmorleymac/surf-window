@@ -6,6 +6,8 @@ services:
       - ./apps/api/.env
     ports:
       - "3001:3001"
+    depends_on:
+      - db
 
   web:
     build:
@@ -14,3 +16,17 @@ services:
       - "8080:80"
     depends_on:
       - api
+
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: surf_window
+      POSTGRES_PASSWORD: surf_window
+      POSTGRES_DB: surf_window
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
+
+volumes:
+  postgres-data:
