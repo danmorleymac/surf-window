@@ -1,7 +1,7 @@
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
-import { getSpotById } from "../data/spots";
+import { getSpotById } from "../db/queries/spots";
 import { ForecastErrorSchema, ForecastResponseSchema } from "../schemas/forecast";
 import { toFastifySchema } from "../schemas/to-fastify-schema";
 import { getForecastForSpot } from "../services/forecast-service";
@@ -29,7 +29,7 @@ export function registerForecastRoutes(app: FastifyInstance): void {
     },
     async (request, reply) => {
       const { spotId } = SpotParamsSchema.parse(request.params);
-      const spot = getSpotById(spotId);
+      const spot = await getSpotById(spotId);
 
       if (!spot) {
         return reply.status(404).send({

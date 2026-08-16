@@ -1,5 +1,5 @@
 import { fetchMarineForecast } from "../clients/open-meteo-client.js";
-import type { SurfSpot } from "../data/spots.js";
+import type { SurfSpot } from "../db/schema.js";
 import { ForecastServiceError } from "../errors/forecast-service-error.js";
 import type { ForecastResponse } from "../schemas/forecast.js";
 

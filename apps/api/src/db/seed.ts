@@ -3,6 +3,12 @@ import { surfSpots } from "./schema.js";
 
 const spots = [
   {
+    id: "bournemouth",
+    name: "Bournemouth",
+    latitude: 50.7164,
+    longitude: -1.8747,
+  },
+  {
     id: "croyde",
     name: "Croyde",
     latitude: 51.13,

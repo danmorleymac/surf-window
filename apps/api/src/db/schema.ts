@@ -10,3 +10,5 @@ import {
     latitude: doublePrecision("latitude").notNull(),
     longitude: doublePrecision("longitude").notNull(),
   });
+
+  export type SurfSpot = typeof surfSpots.$inferSelect;
