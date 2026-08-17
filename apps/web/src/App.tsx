@@ -1,11 +1,25 @@
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 import { Forecast } from "./components/forecast";
-import { spots, type SpotId } from "./data/spots";
+import { spotsQueryOptions } from "./query-options/spots";
 
 function App() {
-  const [selectedSpotId, setSelectedSpotId] =
-    useState<SpotId>("croyde");
+  const [selectedSpotId, setSelectedSpotId] = useState("croyde");
+
+  const {
+    data: spots,
+    isPending,
+    error,
+  } = useQuery(spotsQueryOptions());
+
+  if (isPending) {
+    return <p>Loading spots...</p>;
+  }
+
+  if (error) {
+    return <p>Unable to load surf spots.</p>;
+  }
 
   return (
     <main>
@@ -17,7 +31,7 @@ function App() {
         id="spot"
         value={selectedSpotId}
         onChange={(event) => {
-          setSelectedSpotId(event.target.value as SpotId);
+          setSelectedSpotId(event.target.value);
         }}
       >
         {spots.map((spot) => (

@@ -6,10 +6,9 @@ import {
 } from "../lib/forecast";
 import { forecastQueryOptions } from "../query-options/forecast";
 import { HourlyForecast } from "./hourly-forecast";
-import type { SpotId } from "../data/spots";
 
 type ForecastProps = {
-  spotId: SpotId;
+  spotId: string;
 };
 
 export function Forecast({ spotId }: ForecastProps) {
