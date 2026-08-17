@@ -14,3 +14,7 @@ export async function getSpotById(
 
   return spot;
 }
+
+export async function getAllSpots(): Promise<SurfSpot[]> {
+  return db.select().from(surfSpots);
+}

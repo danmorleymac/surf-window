@@ -5,6 +5,7 @@ import swaggerUi from "@fastify/swagger-ui";
 import { registerForecastRoutes } from "./routes/forecast.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { errorHandler } from "./errors/error-handler.js";
+import { registerSpotRoutes } from "./routes/spots.js";
 
 type BuildAppOptions = {
   logger?: boolean;
@@ -32,7 +33,8 @@ export async function buildApp({ logger = true }: BuildAppOptions = {}) {
   app.setErrorHandler(errorHandler);
 
   registerHealthRoutes(app);
-  registerForecastRoutes(app);
+  registerForecastRoutes(app);  
+  registerSpotRoutes(app);
 
   return app;
 }

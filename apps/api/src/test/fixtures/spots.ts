@@ -8,3 +8,13 @@ export const croydeSpot: SurfSpot = {
   latitude: 51.13,
   longitude: -4.24,
 };
+
+export const surfSpots = [
+  croydeSpot,
+  {
+    id: "saunton",
+    name: "Saunton Sands",
+    latitude: 51.12,
+    longitude: -4.22,
+  },
+];
