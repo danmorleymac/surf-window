@@ -1,6 +1,7 @@
 import { z } from "zod";
 import { ForecastResponseSchema } from "../schemas/forecast";
 import { SpotsResponseSchema, type SpotsResponse } from "../schemas/spots";
+import { FavouritesResponseSchema } from "../schemas/favourites";
 
 const healthResponseSchema = z.object({
   status: z.literal("ok"),
@@ -36,12 +37,48 @@ export async function getSpotForecast(spotId: string) {
   const response = await fetch(`/api/spots/${spotId}/forecast`);
 
   if (!response.ok) {
-    throw new Error(
-      `Forecast request failed with status ${response.status}`,
-    );
+    throw new Error(`Forecast request failed with status ${response.status}`);
   }
 
   const data: unknown = await response.json();
 
   return ForecastResponseSchema.parse(data);
+}
+
+export async function getFavourites() {
+  const response = await fetch("/api/favourites");
+
+  if (!response.ok) {
+    throw new Error(`Favourites request failed with status ${response.status}`);
+  }
+
+  const data: unknown = await response.json();
+
+  return FavouritesResponseSchema.parse(data);
+}
+
+export async function addFavourite(spotId: string) {
+  const response = await fetch("/api/favourites", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ spotId }),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Add favourite request failed with status ${response.status}`);
+  }
+
+  return response.json();
+}
+
+export async function removeFavourite(spotId: string) {
+  const response = await fetch(`/api/favourites/${spotId}`, {
+    method: "DELETE",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Remove favourite request failed with status ${response.status}`);
+  }
 }

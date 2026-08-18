@@ -1,13 +1,37 @@
 import { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { Forecast } from "./components/forecast";
 import { spotsQueryOptions } from "./query-options/spots";
+import { favouritesQueryOptions } from "./query-options/favourites";
+import { addFavourite, removeFavourite } from "./lib/api-client";
 
 function App() {
   const [selectedSpotId, setSelectedSpotId] = useState("croyde");
 
   const { data: spots, isPending, error } = useQuery(spotsQueryOptions());
+  const { data: favourites } = useQuery(favouritesQueryOptions());
+
+  const queryClient = useQueryClient();
+
+  const addFavouriteMutation = useMutation({
+    mutationFn: addFavourite,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["favourites"],
+      });
+    },
+  });
+
+  const removeFavouriteMutation = useMutation({
+    mutationFn: removeFavourite,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({
+        queryKey: ["favourites"],
+      });
+    },
+  });
+  const isFavourite = favourites?.some((favourite) => favourite.spotId === selectedSpotId);
 
   if (isPending) {
     return <p>Loading spots...</p>;
@@ -36,6 +60,18 @@ function App() {
           </option>
         ))}
       </select>
+      <button
+        type="button"
+        onClick={() => {
+          if (isFavourite) {
+            removeFavouriteMutation.mutate(selectedSpotId);
+          } else {
+            addFavouriteMutation.mutate(selectedSpotId);
+          }
+        }}
+      >
+        {isFavourite ? "★ Favourite" : "☆ Favourite"}
+      </button>
 
       <Forecast spotId={selectedSpotId} />
     </main>
