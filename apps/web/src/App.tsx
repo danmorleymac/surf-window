@@ -7,11 +7,7 @@ import { spotsQueryOptions } from "./query-options/spots";
 function App() {
   const [selectedSpotId, setSelectedSpotId] = useState("croyde");
 
-  const {
-    data: spots,
-    isPending,
-    error,
-  } = useQuery(spotsQueryOptions());
+  const { data: spots, isPending, error } = useQuery(spotsQueryOptions());
 
   if (isPending) {
     return <p>Loading spots...</p>;

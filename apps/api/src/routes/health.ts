@@ -9,7 +9,7 @@ export function registerHealthRoutes(app: FastifyInstance) {
       schema: {
         tags: ["System"],
         summary: "Check API health",
-        response: { 
+        response: {
           200: toFastifySchema(HealthResponseSchema),
         },
       },

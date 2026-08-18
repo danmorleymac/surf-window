@@ -18,6 +18,6 @@ export function registerSpotRoutes(app: FastifyInstance): void {
     },
     async () => {
       return getAllSpots();
-    },
+    }
   );
 }

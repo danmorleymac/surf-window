@@ -1,9 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import {
-  getNextForecast,
-  getRemainingForecastsToday,
-} from "../lib/forecast";
+import { getNextForecast, getRemainingForecastsToday } from "../lib/forecast";
 import { forecastQueryOptions } from "../query-options/forecast";
 import { HourlyForecast } from "./hourly-forecast";
 
@@ -12,13 +9,7 @@ type ForecastProps = {
 };
 
 export function Forecast({ spotId }: ForecastProps) {
-  const {
-    data,
-    error,
-    isPending,
-    isFetching,
-    refetch,
-  } = useQuery(forecastQueryOptions(spotId));
+  const { data, error, isPending, isFetching, refetch } = useQuery(forecastQueryOptions(spotId));
 
   if (isPending) {
     return <p>Loading forecast...</p>;
@@ -27,11 +18,7 @@ export function Forecast({ spotId }: ForecastProps) {
   if (error) {
     return (
       <section>
-        <p>
-          {error instanceof Error
-            ? error.message
-            : "Unable to load forecast"}
-        </p>
+        <p>{error instanceof Error ? error.message : "Unable to load forecast"}</p>
 
         <button type="button" onClick={() => void refetch()}>
           Try again
@@ -41,8 +28,7 @@ export function Forecast({ spotId }: ForecastProps) {
   }
 
   const currentForecast = getNextForecast(data.forecast);
-  const remainingForecasts =
-    getRemainingForecastsToday(data.forecast);
+  const remainingForecasts = getRemainingForecastsToday(data.forecast);
 
   if (!currentForecast) {
     return <p>No upcoming forecast available.</p>;
@@ -64,17 +50,11 @@ export function Forecast({ spotId }: ForecastProps) {
           })}
         </p>
 
-        <p>
-          Wave height: {currentForecast.waveHeight ?? "Unknown"} m
-        </p>
+        <p>Wave height: {currentForecast.waveHeight ?? "Unknown"} m</p>
 
-        <p>
-          Wave period: {currentForecast.wavePeriod ?? "Unknown"} s
-        </p>
+        <p>Wave period: {currentForecast.wavePeriod ?? "Unknown"} s</p>
 
-        <p>
-          Direction: {currentForecast.waveDirection ?? "Unknown"}°
-        </p>
+        <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
 
         <button type="button" onClick={() => void refetch()}>
           Refresh

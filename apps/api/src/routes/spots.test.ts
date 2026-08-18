@@ -1,12 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildApp } from "../app.js";
 import { getAllSpots } from "../db/queries/spots.js";
@@ -35,16 +28,16 @@ describe("GET /api/spots", () => {
 
   it("returns all surf spots", async () => {
     mockedGetAllSpots.mockResolvedValue(surfSpots);
-  
+
     const response = await app.inject({
       method: "GET",
       url: "/api/spots",
     });
-  
+
     expect(response.statusCode).toBe(200);
-  
+
     expect(mockedGetAllSpots).toHaveBeenCalledOnce();
-  
+
     expect(response.json()).toEqual(surfSpots);
   });
 });

@@ -1,12 +1,5 @@
 import type { FastifyInstance } from "fastify";
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildApp } from "../app.js";
 import { fetchMarineForecast } from "../clients/open-meteo-client.js";
@@ -54,7 +47,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
 
     expect(mockedFetchMarineForecast).toHaveBeenCalledWith(
       croydeSpot.latitude,
-      croydeSpot.longitude,
+      croydeSpot.longitude
     );
 
     expect(response.json()).toEqual({
@@ -97,9 +90,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
   it("returns 502 when the marine forecast cannot be retrieved", async () => {
     mockedGetSpotById.mockResolvedValue(croydeSpot);
 
-    mockedFetchMarineForecast.mockRejectedValue(
-      new Error("Open-Meteo unavailable"),
-    );
+    mockedFetchMarineForecast.mockRejectedValue(new Error("Open-Meteo unavailable"));
 
     const response = await app.inject({
       method: "GET",

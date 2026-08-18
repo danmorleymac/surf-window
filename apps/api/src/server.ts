@@ -6,8 +6,8 @@ async function start(): Promise<void> {
 
   try {
     await app.listen({
-        port: env.PORT,
-        host: env.HOST,
+      port: env.PORT,
+      host: env.HOST,
     });
   } catch (error) {
     app.log.error(error);

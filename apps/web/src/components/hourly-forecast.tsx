@@ -4,9 +4,7 @@ type HourlyForecastProps = {
   forecast: ForecastHour[];
 };
 
-export function HourlyForecast({
-  forecast,
-}: HourlyForecastProps) {
+export function HourlyForecast({ forecast }: HourlyForecastProps) {
   if (forecast.length === 0) {
     return <p>No more forecast data for today.</p>;
   }
@@ -25,8 +23,7 @@ export function HourlyForecast({
               })}
             </strong>
             {" — "}
-            {item.waveHeight ?? "Unknown"} m,{" "}
-            {item.wavePeriod ?? "Unknown"} s,{" "}
+            {item.waveHeight ?? "Unknown"} m, {item.wavePeriod ?? "Unknown"} s,{" "}
             {item.waveDirection ?? "Unknown"}°
           </li>
         ))}

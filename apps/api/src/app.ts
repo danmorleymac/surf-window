@@ -6,6 +6,7 @@ import { registerForecastRoutes } from "./routes/forecast.js";
 import { registerHealthRoutes } from "./routes/health.js";
 import { errorHandler } from "./errors/error-handler.js";
 import { registerSpotRoutes } from "./routes/spots.js";
+import { registerFavouriteRoutes } from "./routes/favourites.js";
 
 type BuildAppOptions = {
   logger?: boolean;
@@ -35,6 +36,7 @@ export async function buildApp({ logger = true }: BuildAppOptions = {}) {
   registerHealthRoutes(app);
   registerForecastRoutes(app);  
   registerSpotRoutes(app);
-
+  registerFavouriteRoutes(app);
+  
   return app;
 }
