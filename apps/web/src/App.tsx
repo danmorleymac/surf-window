@@ -1,37 +1,22 @@
 import { useState } from "react";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 
 import { Forecast } from "./components/forecast";
+import { useFavourites } from "./hooks/use-favourites";
 import { spotsQueryOptions } from "./query-options/spots";
-import { favouritesQueryOptions } from "./query-options/favourites";
-import { addFavourite, removeFavourite } from "./lib/api-client";
 
 function App() {
   const [selectedSpotId, setSelectedSpotId] = useState("croyde");
 
   const { data: spots, isPending, error } = useQuery(spotsQueryOptions());
-  const { data: favourites } = useQuery(favouritesQueryOptions());
 
-  const queryClient = useQueryClient();
-
-  const addFavouriteMutation = useMutation({
-    mutationFn: addFavourite,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["favourites"],
-      });
-    },
-  });
-
-  const removeFavouriteMutation = useMutation({
-    mutationFn: removeFavourite,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: ["favourites"],
-      });
-    },
-  });
-  const isFavourite = favourites?.some((favourite) => favourite.spotId === selectedSpotId);
+  const {
+    isFavourite,
+    addFavourite,
+    removeFavourite,
+    isPending: isFavouritePending,
+    error: favouriteError,
+  } = useFavourites(selectedSpotId);
 
   if (isPending) {
     return <p>Loading spots...</p>;
@@ -60,18 +45,26 @@ function App() {
           </option>
         ))}
       </select>
+
       <button
         type="button"
+        disabled={isFavouritePending}
         onClick={() => {
           if (isFavourite) {
-            removeFavouriteMutation.mutate(selectedSpotId);
+            removeFavourite(selectedSpotId);
           } else {
-            addFavouriteMutation.mutate(selectedSpotId);
+            addFavourite(selectedSpotId);
           }
         }}
       >
-        {isFavourite ? "★ Favourite" : "☆ Favourite"}
+        {isFavouritePending ? "Updating..." : isFavourite ? "★ Favourite" : "☆ Favourite"}
       </button>
+
+      {favouriteError && (
+        <p>
+          {favouriteError instanceof Error ? favouriteError.message : "Unable to update favourite"}
+        </p>
+      )}
 
       <Forecast spotId={selectedSpotId} />
     </main>
