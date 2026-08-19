@@ -10,7 +10,8 @@ const EnvSchema = z.object({
 
   DATABASE_URL: z.url(),
 
-  OPEN_METEO_BASE_URL: z.url().default("https://marine-api.open-meteo.com/v1/marine"),
+  OPEN_METEO_MARINE_BASE_URL: z.url().default("https://marine-api.open-meteo.com/v1/marine"),
+  OPEN_METEO_WEATHER_BASE_URL: z.url().default("https://api.open-meteo.com/v1/forecast"),
 });
 
 const result = EnvSchema.safeParse(process.env);

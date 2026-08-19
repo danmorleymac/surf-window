@@ -10,7 +10,7 @@ export async function fetchMarineForecast(latitude: number, longitude: number) {
     forecast_days: "7",
   });
 
-  const response = await fetch(`${env.OPEN_METEO_BASE_URL}?${searchParams.toString()}`);
+  const response = await fetch(`${env.OPEN_METEO_MARINE_BASE_URL}?${searchParams.toString()}`);
 
   if (!response.ok) {
     throw new Error(`Open-Meteo request failed with status ${response.status}`);

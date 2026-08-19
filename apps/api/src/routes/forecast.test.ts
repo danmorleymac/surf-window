@@ -2,13 +2,20 @@ import type { FastifyInstance } from "fastify";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { buildApp } from "../app.js";
-import { fetchMarineForecast } from "../clients/open-meteo-client.js";
+import { fetchMarineForecast } from "../clients/open-meteo-marine-client.js";
+import { fetchWeatherForecast } from "../clients/open-meteo-weather-client.js";
+
 import { getSpotById } from "../db/queries/spots.js";
 import { marineForecast } from "../test/fixtures/marine-forecast.js";
+import { weatherForecast } from "../test/fixtures/weather-forecast.js";
 import { croydeSpot } from "../test/fixtures/spots.js";
 
-vi.mock("../clients/open-meteo-client.js", () => ({
+vi.mock("../clients/open-meteo-marine-client.js", () => ({
   fetchMarineForecast: vi.fn(),
+}));
+
+vi.mock("../clients/open-meteo-weather-client.js", () => ({
+  fetchWeatherForecast: vi.fn(),
 }));
 
 vi.mock("../db/queries/spots.js", () => ({
@@ -16,6 +23,7 @@ vi.mock("../db/queries/spots.js", () => ({
 }));
 
 const mockedFetchMarineForecast = vi.mocked(fetchMarineForecast);
+const mockedFetchWeatherForecast = vi.mocked(fetchWeatherForecast);
 const mockedGetSpotById = vi.mocked(getSpotById);
 
 describe("GET /api/spots/:spotId/forecast", () => {
@@ -32,9 +40,11 @@ describe("GET /api/spots/:spotId/forecast", () => {
     await app.close();
   });
 
+  //success
   it("returns a forecast for a known surf spot", async () => {
     mockedGetSpotById.mockResolvedValue(croydeSpot);
     mockedFetchMarineForecast.mockResolvedValue(marineForecast);
+    mockedFetchWeatherForecast.mockResolvedValue(weatherForecast);
 
     const response = await app.inject({
       method: "GET",
@@ -50,6 +60,11 @@ describe("GET /api/spots/:spotId/forecast", () => {
       croydeSpot.longitude
     );
 
+    expect(mockedFetchWeatherForecast).toHaveBeenCalledWith(
+      croydeSpot.latitude,
+      croydeSpot.longitude
+    );
+
     expect(response.json()).toEqual({
       spot: croydeSpot,
       forecast: [
@@ -58,12 +73,16 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveHeight: 1.2,
           wavePeriod: 9,
           waveDirection: 275,
+          windSpeed: 18,
+          windDirection: 240,
         },
         {
           time: "2026-08-16T13:00",
           waveHeight: 1.3,
           wavePeriod: 9.5,
           waveDirection: 280,
+          windSpeed: 20,
+          windDirection: 245,
         },
       ],
     });
@@ -85,12 +104,14 @@ describe("GET /api/spots/:spotId/forecast", () => {
 
     expect(mockedGetSpotById).toHaveBeenCalledWith("unknown");
     expect(mockedFetchMarineForecast).not.toHaveBeenCalled();
+    expect(mockedFetchWeatherForecast).not.toHaveBeenCalled();
   });
 
   it("returns 502 when the marine forecast cannot be retrieved", async () => {
     mockedGetSpotById.mockResolvedValue(croydeSpot);
 
     mockedFetchMarineForecast.mockRejectedValue(new Error("Open-Meteo unavailable"));
+    mockedFetchWeatherForecast.mockRejectedValue(new Error("Open-Meteo unavailable"));
 
     const response = await app.inject({
       method: "GET",
