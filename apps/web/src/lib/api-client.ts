@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { ForecastResponseSchema } from "../schemas/forecast";
 import { SpotsResponseSchema, type SpotsResponse } from "../schemas/spots";
-import { FavouritesResponseSchema } from "../schemas/favourites";
+import { FavouriteSchema, FavouritesResponseSchema } from "../schemas/favourites";
 
 const healthResponseSchema = z.object({
   status: z.literal("ok"),
@@ -70,7 +70,9 @@ export async function addFavourite(spotId: string) {
     throw new Error(`Add favourite request failed with status ${response.status}`);
   }
 
-  return response.json();
+  const data: unknown = await response.json();
+
+  return FavouriteSchema.parse(data);
 }
 
 export async function removeFavourite(spotId: string) {
