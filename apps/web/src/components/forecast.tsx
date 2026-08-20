@@ -55,6 +55,9 @@ export function Forecast({ spotId }: ForecastProps) {
         <p>Wave period: {currentForecast.wavePeriod ?? "Unknown"} s</p>
 
         <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
+        <p>Wind: {currentForecast.windSpeedKmh ?? "Unknown"} km/h</p>
+
+        <p>Wind direction: {currentForecast.windDirection ?? "Unknown"}°</p>
 
         <button type="button" onClick={() => void refetch()}>
           Refresh

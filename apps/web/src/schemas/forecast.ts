@@ -7,6 +7,8 @@ export const ForecastHourSchema = z.object({
   waveHeight: z.number().nullable(),
   wavePeriod: z.number().nullable(),
   waveDirection: z.number().nullable(),
+  windSpeedKmh: z.number().nullable(),
+  windDirection: z.number().nullable(),
 });
 
 export type ForecastHour = z.infer<typeof ForecastHourSchema>;
