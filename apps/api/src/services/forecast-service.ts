@@ -6,20 +6,33 @@ import type { ForecastResponse } from "../schemas/forecast.js";
 
 export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastResponse> {
   try {
-    const [marineData, weatherData] = await Promise.all([
-      fetchMarineForecast(spot.latitude, spot.longitude),
-      fetchWeatherForecast(spot.latitude, spot.longitude),
-    ]);
+    const marineData = await fetchMarineForecast(spot.latitude, spot.longitude);
 
-    const weatherByTime = new Map(
-      weatherData.hourly.time.map((time, index) => [
-        time,
-        {
-          windSpeed: weatherData.hourly.wind_speed_10m[index] ?? null,
-          windDirection: weatherData.hourly.wind_direction_10m[index] ?? null,
-        },
-      ])
-    );
+    let weatherByTime = new Map<
+      string,
+      {
+        windSpeedKmh: number | null;
+        windDirection: number | null;
+      }
+    >();
+
+    //  Wind data is optional. A weather API failure should not prevent the forecast from being returned.
+    try {
+      const weatherData = await fetchWeatherForecast(spot.latitude, spot.longitude);
+
+      // Map the weather data by time to get the wind speed and direction for each hour
+      weatherByTime = new Map(
+        weatherData.hourly.time.map((time, index) => [
+          time,
+          {
+            windSpeedKmh: weatherData.hourly.wind_speed_10m[index] ?? null,
+            windDirection: weatherData.hourly.wind_direction_10m[index] ?? null,
+          },
+        ])
+      );
+    } catch {
+      // Weather enriches the forecast, but is not required.
+    }
 
     const forecast = marineData.hourly.time.map((time, index) => {
       const wind = weatherByTime.get(time);
@@ -29,7 +42,7 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
         waveHeight: marineData.hourly.wave_height[index] ?? null,
         wavePeriod: marineData.hourly.wave_period[index] ?? null,
         waveDirection: marineData.hourly.wave_direction[index] ?? null,
-        windSpeed: wind?.windSpeed ?? null,
+        windSpeedKmh: wind?.windSpeedKmh ?? null,
         windDirection: wind?.windDirection ?? null,
       };
     });

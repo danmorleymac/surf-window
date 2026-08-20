@@ -73,7 +73,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveHeight: 1.2,
           wavePeriod: 9,
           waveDirection: 275,
-          windSpeed: 18,
+          windSpeedKmh: 18,
           windDirection: 240,
         },
         {
@@ -81,7 +81,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveHeight: 1.3,
           wavePeriod: 9.5,
           waveDirection: 280,
-          windSpeed: 20,
+          windSpeedKmh: 20,
           windDirection: 245,
         },
       ],
@@ -122,6 +122,42 @@ describe("GET /api/spots/:spotId/forecast", () => {
 
     expect(response.json()).toEqual({
       error: "Unable to retrieve marine forecast",
+    });
+  });
+
+  it("returns the marine forecast without wind when weather cannot be retrieved", async () => {
+    mockedGetSpotById.mockResolvedValue(croydeSpot);
+    mockedFetchMarineForecast.mockResolvedValue(marineForecast);
+
+    mockedFetchWeatherForecast.mockRejectedValue(new Error("Weather unavailable"));
+
+    const response = await app.inject({
+      method: "GET",
+      url: "/api/spots/croyde/forecast",
+    });
+
+    expect(response.statusCode).toBe(200);
+
+    expect(response.json()).toEqual({
+      spot: croydeSpot,
+      forecast: [
+        {
+          time: "2026-08-16T12:00",
+          waveHeight: 1.2,
+          wavePeriod: 9,
+          waveDirection: 275,
+          windSpeedKmh: null,
+          windDirection: null,
+        },
+        {
+          time: "2026-08-16T13:00",
+          waveHeight: 1.3,
+          wavePeriod: 9.5,
+          waveDirection: 280,
+          windSpeedKmh: null,
+          windDirection: null,
+        },
+      ],
     });
   });
 });

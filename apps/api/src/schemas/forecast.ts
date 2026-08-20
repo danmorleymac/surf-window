@@ -24,7 +24,7 @@ export const ForecastHourSchema = z.object({
   waveHeight: z.number().nullable(),
   wavePeriod: z.number().nullable(),
   waveDirection: z.number().nullable(),
-  windSpeed: z.number().nullable(),
+  windSpeedKmh: z.number().nullable(),
   windDirection: z.number().nullable(),
 });
 
