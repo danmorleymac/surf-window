@@ -1,75 +1,87 @@
-# React + TypeScript + Vite
+# Surf Window Web
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React frontend for Surf Window.
 
-Currently, two official plugins are available:
+Displays surf forecasts and allows users to browse surf spots and manage favourites.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech stack
 
-## React Compiler
+- React
+- TypeScript
+- Vite
+- TanStack Query
+- Zod
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Local development
 
-## Expanding the ESLint configuration
+Install dependencies from the **repository root**:
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Start the application from the repository root:
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm run dev
 ```
+
+The web application runs at:
+
+`http://localhost:5173`
+
+The Surf Window API must also be running locally for forecast, spot and favourite data to load.
+
+## API data
+
+API requests are handled through the frontend API client.
+
+TanStack Query is used for server state, including:
+
+- Surf spots
+- Forecasts
+- Favourites
+- Favourite mutations and cache invalidation
+
+Shared Zod API contracts live in:
+
+```text
+packages/contracts
+```
+
+These are used by both the API and web application so response shapes are defined in one place.
+
+## Useful commands
+
+Run web-specific commands from `apps/web`:
+
+```bash
+npm run dev          # Start Vite development server
+npm run lint         # Run ESLint
+npm run typecheck    # Run TypeScript checks
+npm run build        # Create a production build
+npm run preview      # Preview the production build
+```
+
+Repository-wide checks can be run from the project root using Turborepo:
+
+```bash
+npm run lint
+npm run typecheck
+npm test
+npm run build
+```
+
+## Project structure
+
+Key frontend areas:
+
+```text
+src/
+├── components/       # React UI components
+├── hooks/            # Reusable application/state logic
+├── lib/              # API client and supporting utilities
+└── query-options/    # TanStack Query configuration
+```
+
+Where UI or state logic becomes reusable or sufficiently complex, it is extracted into custom hooks to keep components focused on rendering and interaction.
