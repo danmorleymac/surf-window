@@ -20,5 +20,10 @@ export const ForecastResponseSchema = z.object({
   forecast: z.array(ForecastHourSchema),
 });
 
+export const ForecastErrorSchema = z.object({
+  error: z.string(),
+});
+
+export type ForecastError = z.infer<typeof ForecastErrorSchema>;
 export type ForecastHour = z.infer<typeof ForecastHourSchema>;
 export type ForecastResponse = z.infer<typeof ForecastResponseSchema>;

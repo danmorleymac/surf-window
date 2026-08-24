@@ -2,8 +2,7 @@ import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 
 import { getSpotById } from "../db/queries/spots";
-import { ForecastErrorSchema } from "../schemas/forecast";
-import { ForecastResponseSchema } from "@surf-window/contracts/forecast";
+import { ForecastResponseSchema, ForecastErrorSchema } from "@surf-window/contracts";
 
 import { toFastifySchema } from "../schemas/to-fastify-schema";
 import { getForecastForSpot } from "../services/forecast-service";

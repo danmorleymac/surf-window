@@ -1,7 +1,11 @@
 import { z } from "zod";
-import { ForecastResponseSchema } from "@surf-window/contracts/forecast";
-import { SpotsResponseSchema, type SpotsResponse } from "../schemas/spots";
-import { FavouriteSchema, FavouritesResponseSchema } from "../schemas/favourites";
+import {
+  FavouriteSchema,
+  FavouritesResponseSchema,
+  ForecastResponseSchema,
+  SpotsResponseSchema,
+  type SpotsResponse,
+} from "@surf-window/contracts";
 
 const healthResponseSchema = z.object({
   status: z.literal("ok"),

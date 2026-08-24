@@ -9,8 +9,10 @@ import {
   FavouriteParamsSchema,
   FavouriteResponseSchema,
   FavouritesResponseSchema,
-} from "../schemas/favourites.js";
+} from "@surf-window/contracts";
+
 import { toFastifySchema } from "../schemas/to-fastify-schema.js";
+
 export function registerFavouriteRoutes(app: FastifyInstance): void {
   app.get(
     "/api/favourites",
@@ -27,6 +29,7 @@ export function registerFavouriteRoutes(app: FastifyInstance): void {
       return getFavourites();
     }
   );
+
   app.post<{
     Body: z.infer<typeof AddFavouriteBodySchema>;
   }>(
@@ -60,6 +63,7 @@ export function registerFavouriteRoutes(app: FastifyInstance): void {
       });
     }
   );
+
   app.delete<{
     Params: z.infer<typeof FavouriteParamsSchema>;
   }>(

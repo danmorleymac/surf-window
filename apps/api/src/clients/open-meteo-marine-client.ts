@@ -1,5 +1,5 @@
 import { env } from "../config/env.js";
-import { OpenMeteoMarineResponseSchema } from "../schemas/forecast.js";
+import { OpenMeteoMarineResponseSchema } from "../schemas/open-meteo.js";
 
 export async function fetchMarineForecast(latitude: number, longitude: number) {
   const searchParams = new URLSearchParams({

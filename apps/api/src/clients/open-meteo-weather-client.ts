@@ -1,5 +1,5 @@
 import { env } from "../config/env.js";
-import { OpenMeteoWeatherResponseSchema } from "../schemas/forecast.js";
+import { OpenMeteoWeatherResponseSchema } from "../schemas/open-meteo.js";
 
 export async function fetchWeatherForecast(latitude: number, longitude: number) {
   const searchParams = new URLSearchParams({

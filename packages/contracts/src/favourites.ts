@@ -1,5 +1,8 @@
 import { z } from "zod";
 
+export const FavouriteSchema = z.object({
+  spotId: z.string(),
+});
 export const AddFavouriteBodySchema = z.object({
   spotId: z.string(),
 });
@@ -17,3 +20,5 @@ export const FavouriteParamsSchema = z.object({
 export const FavouriteErrorSchema = z.object({
   error: z.string(),
 });
+
+export type Favourite = z.infer<typeof FavouriteSchema>;

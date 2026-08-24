@@ -19,20 +19,5 @@ export const OpenMeteoWeatherResponseSchema = z.object({
   }),
 });
 
-export const ForecastHourSchema = z.object({
-  time: z.string(),
-  waveHeight: z.number().nullable(),
-  wavePeriod: z.number().nullable(),
-  waveDirection: z.number().nullable(),
-  windSpeedKmh: z.number().nullable(),
-  windDirection: z.number().nullable(),
-});
-
-export const ForecastErrorSchema = z.object({
-  error: z.string(),
-});
-
-export type ForecastError = z.infer<typeof ForecastErrorSchema>;
-
 export type OpenMeteoMarineResponse = z.infer<typeof OpenMeteoMarineResponseSchema>;
 export type OpenMeteoWeatherResponse = z.infer<typeof OpenMeteoWeatherResponseSchema>;

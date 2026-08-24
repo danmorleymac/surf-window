@@ -1,4 +1,4 @@
-import type { ForecastHour } from "@surf-window/contracts/forecast";
+import type { ForecastHour } from "@surf-window/contracts";
 
 type HourlyForecastProps = {
   forecast: ForecastHour[];

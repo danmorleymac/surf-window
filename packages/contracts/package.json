@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "exports": {
-    "./forecast": "./src/forecast.ts"
+    ".": "./src/index.ts"
   },
   "dependencies": {
     "zod": "^4.4.3"

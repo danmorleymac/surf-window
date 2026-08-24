@@ -1,4 +1,4 @@
-import type { OpenMeteoWeatherResponse } from "../../schemas/forecast.js";
+import type { OpenMeteoWeatherResponse } from "../../schemas/open-meteo.js";
 
 export const weatherForecast: OpenMeteoWeatherResponse = {
   hourly: {
