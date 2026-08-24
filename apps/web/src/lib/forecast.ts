@@ -1,4 +1,4 @@
-import type { ForecastHour } from "../schemas/forecast";
+import type { ForecastHour } from "@surf-window/contracts/forecast";
 
 export function getNextForecast(
   forecast: ForecastHour[],

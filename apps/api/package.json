@@ -9,7 +9,6 @@
     "start": "node dist/server.js",
     "lint": "eslint .",
     "test": "vitest run",
-  
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:seed": "tsx src/db/seed.ts",
@@ -22,6 +21,7 @@
   "dependencies": {
     "@fastify/swagger": "^9.8.1",
     "@fastify/swagger-ui": "^6.1.1",
+    "@surf-window/contracts": "0.0.0",
     "dotenv": "^17.4.2",
     "drizzle-orm": "^0.45.2",
     "fastify": "^5.10.0",

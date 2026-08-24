@@ -1,7 +1,6 @@
-// apps/web/src/schemas/forecast.ts
-
 import { z } from "zod";
 
+// Shared API contract used by both Fastify and React.
 export const ForecastHourSchema = z.object({
   time: z.string(),
   waveHeight: z.number().nullable(),
@@ -10,8 +9,6 @@ export const ForecastHourSchema = z.object({
   windSpeedKmh: z.number().nullable(),
   windDirection: z.number().nullable(),
 });
-
-export type ForecastHour = z.infer<typeof ForecastHourSchema>;
 
 export const ForecastResponseSchema = z.object({
   spot: z.object({
@@ -23,4 +20,5 @@ export const ForecastResponseSchema = z.object({
   forecast: z.array(ForecastHourSchema),
 });
 
+export type ForecastHour = z.infer<typeof ForecastHourSchema>;
 export type ForecastResponse = z.infer<typeof ForecastResponseSchema>;

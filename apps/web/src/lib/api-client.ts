@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { ForecastResponseSchema } from "../schemas/forecast";
+import { ForecastResponseSchema } from "@surf-window/contracts/forecast";
 import { SpotsResponseSchema, type SpotsResponse } from "../schemas/spots";
 import { FavouriteSchema, FavouritesResponseSchema } from "../schemas/favourites";
 

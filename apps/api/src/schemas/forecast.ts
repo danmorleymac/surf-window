@@ -28,21 +28,10 @@ export const ForecastHourSchema = z.object({
   windDirection: z.number().nullable(),
 });
 
-export const ForecastResponseSchema = z.object({
-  spot: z.object({
-    id: z.string(),
-    name: z.string(),
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
-  forecast: z.array(ForecastHourSchema),
-});
-
 export const ForecastErrorSchema = z.object({
   error: z.string(),
 });
 
-export type ForecastResponse = z.infer<typeof ForecastResponseSchema>;
 export type ForecastError = z.infer<typeof ForecastErrorSchema>;
 
 export type OpenMeteoMarineResponse = z.infer<typeof OpenMeteoMarineResponseSchema>;

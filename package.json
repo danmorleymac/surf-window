@@ -1,0 +1,22 @@
+{
+  "devDependencies": {
+    "turbo": "^2.10.11"
+  },
+  "devEngines": {
+    "packageManager": {
+      "name": "npm",
+      "version": "10.9.8"
+    }
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

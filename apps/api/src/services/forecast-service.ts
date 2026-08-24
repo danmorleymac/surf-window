@@ -2,7 +2,7 @@ import { fetchMarineForecast } from "../clients/open-meteo-marine-client.js";
 import { fetchWeatherForecast } from "../clients/open-meteo-weather-client.js";
 import type { SurfSpot } from "../db/schema.js";
 import { ForecastServiceError } from "../errors/forecast-service-error.js";
-import type { ForecastResponse } from "../schemas/forecast.js";
+import type { ForecastResponse } from "@surf-window/contracts/forecast";
 
 export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastResponse> {
   try {
