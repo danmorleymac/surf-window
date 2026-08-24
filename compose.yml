@@ -1,44 +1,32 @@
-name: CI
+services:
+  api:
+    build:
+      context: ./apps/api
+    env_file:
+      - ./apps/api/.env
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
 
-on:
-  pull_request:
-    branches:
-      - main
+  web:
+    build:
+      context: ./apps/web
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
 
-  push:
-    branches:
-      - main
+  db:
+    image: postgres:18-alpine
+    environment:
+      POSTGRES_USER: surf_window
+      POSTGRES_PASSWORD: surf_window
+      POSTGRES_DB: surf_window
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql
 
-jobs:
-  ci:
-    runs-on: ubuntu-latest
-
-    env:
-      NODE_ENV: test
-      DATABASE_URL: postgresql://surf_window:surf_window@localhost:5432/surf_window
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v7
-
-      - name: Set up Node
-        uses: actions/setup-node@v7
-        with:
-          node-version: 22
-          cache: npm
-          cache-dependency-path: package-lock.json
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Lint
-        run: npm run lint
-
-      - name: Typecheck
-        run: npm run typecheck
-
-      - name: Test
-        run: npm test
-
-      - name: Build
-        run: npm run build
+volumes:
+  postgres-data:
