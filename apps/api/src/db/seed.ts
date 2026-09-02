@@ -12,6 +12,13 @@ const spots = [
     shoreBearing: 180,
   },
   {
+    id: "cromer",
+    name: "Cromer",
+    latitude: 52.94,
+    longitude: 1.28,
+    shoreBearing: 25,
+  },
+  {
     id: "croyde",
     name: "Croyde",
     latitude: 51.13,

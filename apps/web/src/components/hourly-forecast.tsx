@@ -25,7 +25,7 @@ export function HourlyForecast({ forecast }: HourlyForecastProps) {
             {" — "}
             {item.waveHeight ?? "Unknown"} m, {item.wavePeriod ?? "Unknown"} s,{" "}
             {item.waveDirection ?? "Unknown"}°, {item.windSpeedKmh ?? "Unknown"} km/h,{" "}
-            {item.windDirection ?? "Unknown"}°
+            {item.windDirection ?? "Unknown"}°, {item.windCondition ?? "Unknown"}
           </li>
         ))}
       </ul>

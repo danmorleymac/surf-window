@@ -38,6 +38,13 @@ describe("GET /api/spots", () => {
 
     expect(mockedGetAllSpots).toHaveBeenCalledOnce();
 
-    expect(response.json()).toEqual(surfSpots);
+    expect(response.json()).toEqual(
+      surfSpots.map(({ id, name, latitude, longitude }) => ({
+        id,
+        name,
+        latitude,
+        longitude,
+      }))
+    );
   });
 });

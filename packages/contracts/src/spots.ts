@@ -5,7 +5,6 @@ export const SpotSchema = z.object({
   name: z.string(),
   latitude: z.number(),
   longitude: z.number(),
-  shoreBearing: z.number(),
 });
 
 export const SpotsResponseSchema = z.array(SpotSchema);

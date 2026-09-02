@@ -65,7 +65,12 @@ describe("GET /api/spots/:spotId/forecast", () => {
     );
 
     expect(response.json()).toEqual({
-      spot: croydeSpot,
+      spot: {
+        id: croydeSpot.id,
+        name: croydeSpot.name,
+        latitude: croydeSpot.latitude,
+        longitude: croydeSpot.longitude,
+      },
       forecast: [
         {
           time: "2026-08-16T12:00",
@@ -140,7 +145,12 @@ describe("GET /api/spots/:spotId/forecast", () => {
     expect(response.statusCode).toBe(200);
 
     expect(response.json()).toEqual({
-      spot: croydeSpot,
+      spot: {
+        id: croydeSpot.id,
+        name: croydeSpot.name,
+        latitude: croydeSpot.latitude,
+        longitude: croydeSpot.longitude,
+      },
       forecast: [
         {
           time: "2026-08-16T12:00",

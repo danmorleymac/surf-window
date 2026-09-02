@@ -32,4 +32,8 @@ describe("getWindCondition", () => {
   it("classifies the opposite direction as offshore", () => {
     expect(getWindCondition(10, 190)).toBe("offshore");
   });
+
+  it("classifies a near-opposite wind as offshore", () => {
+    expect(getWindCondition(208, 25)).toBe("offshore");
+  });
 });
