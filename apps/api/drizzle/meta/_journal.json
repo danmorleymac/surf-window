@@ -15,6 +15,13 @@
       "when": 1787068429440,
       "tag": "0001_cultured_pet_avengers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1788361008827,
+      "tag": "0002_mighty_blur",
+      "breakpoints": true
     }
   ]
 }

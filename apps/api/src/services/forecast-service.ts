@@ -1,6 +1,7 @@
 import { fetchMarineForecast } from "../clients/open-meteo-marine-client.js";
 import { fetchWeatherForecast } from "../clients/open-meteo-weather-client.js";
 import type { SurfSpot } from "../db/schema.js";
+import { getWindCondition } from "../domain/wind-condition.js";
 import { ForecastServiceError } from "../errors/forecast-service-error.js";
 import type { ForecastResponse } from "@surf-window/contracts";
 
@@ -36,6 +37,7 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
 
     const forecast = marineData.hourly.time.map((time, index) => {
       const wind = weatherByTime.get(time);
+      const windDirection = wind?.windDirection ?? null;
 
       return {
         time,
@@ -44,6 +46,8 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
         waveDirection: marineData.hourly.wave_direction[index] ?? null,
         windSpeedKmh: wind?.windSpeedKmh ?? null,
         windDirection: wind?.windDirection ?? null,
+        windCondition:
+          windDirection === null ? null : getWindCondition(windDirection, spot.shoreBearing),
       };
     });
 

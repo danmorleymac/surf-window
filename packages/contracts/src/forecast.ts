@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { SpotSchema } from "./spots.js";
 
 // Shared API contract used by both Fastify and React.
 export const ForecastHourSchema = z.object({
@@ -8,15 +9,13 @@ export const ForecastHourSchema = z.object({
   waveDirection: z.number().nullable(),
   windSpeedKmh: z.number().nullable(),
   windDirection: z.number().nullable(),
+  windCondition: z
+    .enum(["onshore", "cross-onshore", "cross-shore", "cross-offshore", "offshore"])
+    .nullable(),
 });
 
 export const ForecastResponseSchema = z.object({
-  spot: z.object({
-    id: z.string(),
-    name: z.string(),
-    latitude: z.number(),
-    longitude: z.number(),
-  }),
+  spot: SpotSchema,
   forecast: z.array(ForecastHourSchema),
 });
 

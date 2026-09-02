@@ -40,7 +40,6 @@ describe("GET /api/spots/:spotId/forecast", () => {
     await app.close();
   });
 
-  //success
   it("returns a forecast for a known surf spot", async () => {
     mockedGetSpotById.mockResolvedValue(croydeSpot);
     mockedFetchMarineForecast.mockResolvedValue(marineForecast);
@@ -75,6 +74,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveDirection: 275,
           windSpeedKmh: 18,
           windDirection: 240,
+          windCondition: "cross-onshore",
         },
         {
           time: "2026-08-16T13:00",
@@ -83,6 +83,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveDirection: 280,
           windSpeedKmh: 20,
           windDirection: 245,
+          windCondition: "onshore",
         },
       ],
     });
@@ -148,6 +149,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveDirection: 275,
           windSpeedKmh: null,
           windDirection: null,
+          windCondition: null,
         },
         {
           time: "2026-08-16T13:00",
@@ -156,6 +158,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           waveDirection: 280,
           windSpeedKmh: null,
           windDirection: null,
+          windCondition: null,
         },
       ],
     });
