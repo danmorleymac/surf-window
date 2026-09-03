@@ -6,7 +6,7 @@ export async function fetchWeatherForecast(latitude: number, longitude: number) 
     latitude: latitude.toString(),
     longitude: longitude.toString(),
     hourly: ["wind_speed_10m", "wind_direction_10m"].join(","),
-    timezone: "Europe/London",
+    timezone: "GMT",
     forecast_days: "7",
   });
 

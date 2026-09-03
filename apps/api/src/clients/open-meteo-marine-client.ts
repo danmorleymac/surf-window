@@ -6,7 +6,7 @@ export async function fetchMarineForecast(latitude: number, longitude: number) {
     latitude: latitude.toString(),
     longitude: longitude.toString(),
     hourly: ["wave_height", "wave_period", "wave_direction"].join(","),
-    timezone: "Europe/London",
+    timezone: "GMT",
     forecast_days: "7",
   });
 

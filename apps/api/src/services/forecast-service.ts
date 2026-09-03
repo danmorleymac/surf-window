@@ -1,9 +1,12 @@
+import type { ForecastResponse } from "@surf-window/contracts";
+
 import { fetchMarineForecast } from "../clients/open-meteo-marine-client.js";
 import { fetchWeatherForecast } from "../clients/open-meteo-weather-client.js";
+import { getTidalEvents } from "../clients/ukho-tidal-client.js";
 import type { SurfSpot } from "../db/schema.js";
+import { getTideState } from "../domain/tide-state.js";
 import { getWindCondition } from "../domain/wind-condition.js";
 import { ForecastServiceError } from "../errors/forecast-service-error.js";
-import type { ForecastResponse } from "@surf-window/contracts";
 
 export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastResponse> {
   try {
@@ -17,11 +20,11 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       }
     >();
 
-    //  Wind data is optional. A weather API failure should not prevent the forecast from being returned.
+    // Wind data is optional. A weather API failure should not prevent the forecast from being returned.
     try {
       const weatherData = await fetchWeatherForecast(spot.latitude, spot.longitude);
 
-      // Map the weather data by time to get the wind speed and direction for each hour
+      // Map weather data by time so it can be joined to each marine forecast hour.
       weatherByTime = new Map(
         weatherData.hourly.time.map((time, index) => [
           time,
@@ -35,9 +38,21 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       // Weather enriches the forecast, but is not required.
     }
 
+    let tidalEvents: Awaited<ReturnType<typeof getTidalEvents>> = [];
+
+    // Tide data is optional. A UKHO failure should not prevent the forecast from being returned.
+    try {
+      tidalEvents = await getTidalEvents(spot.tidalStationId);
+    } catch {
+      // Tide enriches the forecast, but is not required.
+    }
+
     const forecast = marineData.hourly.time.map((time, index) => {
       const wind = weatherByTime.get(time);
       const windDirection = wind?.windDirection ?? null;
+
+      const tideState =
+        tidalEvents.length === 0 ? null : getTideState(new Date(`${time}Z`), tidalEvents);
 
       return {
         time,
@@ -45,9 +60,10 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
         wavePeriod: marineData.hourly.wave_period[index] ?? null,
         waveDirection: marineData.hourly.wave_direction[index] ?? null,
         windSpeedKmh: wind?.windSpeedKmh ?? null,
-        windDirection: wind?.windDirection ?? null,
+        windDirection,
         windCondition:
           windDirection === null ? null : getWindCondition(windDirection, spot.shoreBearing),
+        tideState,
       };
     });
 

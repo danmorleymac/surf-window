@@ -22,6 +22,13 @@
       "when": 1788361008827,
       "tag": "0002_mighty_blur",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1788436842073,
+      "tag": "0003_confused_doorman",
+      "breakpoints": true
     }
   ]
 }
