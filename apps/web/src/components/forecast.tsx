@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getNextForecast, getRemainingForecastsToday } from "../lib/forecast";
 import { forecastQueryOptions } from "../query-options/forecast";
 import { HourlyForecast } from "./hourly-forecast";
+import { TideEvents } from "./tide-event";
 
 type ForecastProps = {
   spotId: string;
@@ -28,6 +29,13 @@ export function Forecast({ spotId }: ForecastProps) {
   }
 
   const currentForecast = getNextForecast(data.forecast);
+
+  const currentDay = new Date(`${currentForecast?.time}Z`).toISOString().slice(0, 10);
+
+  const todaysTideEvents = data.tideEvents.filter(
+    (event) => event.time.slice(0, 10) === currentDay
+  );
+
   const remainingForecasts = getRemainingForecastsToday(data.forecast);
 
   if (!currentForecast) {
@@ -66,7 +74,7 @@ export function Forecast({ spotId }: ForecastProps) {
           Refresh
         </button>
       </section>
-
+      <TideEvents events={todaysTideEvents} />
       <HourlyForecast forecast={remainingForecasts} />
     </>
   );

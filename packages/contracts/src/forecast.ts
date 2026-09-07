@@ -34,3 +34,4 @@ export const ForecastResponseSchema = z.object({
 export type ForecastError = z.infer<typeof ForecastErrorSchema>;
 export type ForecastHour = z.infer<typeof ForecastHourSchema>;
 export type ForecastResponse = z.infer<typeof ForecastResponseSchema>;
+export type TideEvent = z.infer<typeof TideEventSchema>;
