@@ -15,13 +15,20 @@ export const ForecastHourSchema = z.object({
     .nullable(),
 });
 
+export const ForecastErrorSchema = z.object({
+  error: z.string(),
+});
+
+export const TideEventSchema = z.object({
+  type: z.enum(["high", "low"]),
+  time: z.string(),
+  height: z.number().nullable(),
+});
+
 export const ForecastResponseSchema = z.object({
   spot: SpotSchema,
   forecast: z.array(ForecastHourSchema),
-});
-
-export const ForecastErrorSchema = z.object({
-  error: z.string(),
+  tideEvents: z.array(TideEventSchema),
 });
 
 export type ForecastError = z.infer<typeof ForecastErrorSchema>;

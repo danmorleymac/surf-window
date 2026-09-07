@@ -9,6 +9,10 @@ import { getSpotById } from "../db/queries/spots.js";
 import { marineForecast } from "../test/fixtures/marine-forecast.js";
 import { weatherForecast } from "../test/fixtures/weather-forecast.js";
 import { croydeSpot } from "../test/fixtures/spots.js";
+import { tidalEvents } from "../test/fixtures/tide-events.js";
+
+// Mock external/data boundaries while keeping the route, service, and domain logic real.
+// This lets the tests verify how provider data is transformed into our public API response.
 
 vi.mock("../clients/open-meteo-marine-client.js", () => ({
   fetchMarineForecast: vi.fn(),
@@ -53,24 +57,9 @@ describe("GET /api/spots/:spotId/forecast", () => {
     mockedFetchMarineForecast.mockResolvedValue(marineForecast);
     mockedFetchWeatherForecast.mockResolvedValue(weatherForecast);
 
-    mockedGetTidalEvents.mockResolvedValue([
-      {
-        EventType: "LowWater",
-        DateTime: "2026-08-16T10:00:00",
-        Height: 1.2,
-        IsApproximateTime: false,
-        IsApproximateHeight: false,
-        Filtered: false,
-      },
-      {
-        EventType: "HighWater",
-        DateTime: "2026-08-16T16:00:00",
-        Height: 6.5,
-        IsApproximateTime: false,
-        IsApproximateHeight: false,
-        Filtered: false,
-      },
-    ]);
+    // The client returns UKHO-shaped data; the response assertion below verifies
+    // that the service maps it to Surf Window's public tide-event shape.
+    mockedGetTidalEvents.mockResolvedValue(tidalEvents);
 
     const response = await app.inject({
       method: "GET",
@@ -120,6 +109,18 @@ describe("GET /api/spots/:spotId/forecast", () => {
           windSpeedKmh: 20,
           windDirection: 245,
           windCondition: "onshore",
+        },
+      ],
+      tideEvents: [
+        {
+          type: "low",
+          time: "2026-08-16T10:00:00",
+          height: 1.2,
+        },
+        {
+          type: "high",
+          time: "2026-08-16T16:00:00",
+          height: 6.5,
         },
       ],
     });
@@ -204,6 +205,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
           windCondition: null,
         },
       ],
+      tideEvents: [],
     });
   });
 
@@ -220,6 +222,8 @@ describe("GET /api/spots/:spotId/forecast", () => {
     });
 
     expect(response.statusCode).toBe(200);
+
+    expect(response.json().tideEvents).toEqual([]);
 
     expect(response.json().forecast).toEqual(
       expect.arrayContaining([

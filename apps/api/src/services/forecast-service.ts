@@ -47,6 +47,14 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       // Tide enriches the forecast, but is not required.
     }
 
+    const tideEvents = tidalEvents
+      .filter((event): event is typeof event & { DateTime: string } => event.DateTime !== undefined)
+      .map((event) => ({
+        type: event.EventType === "HighWater" ? ("high" as const) : ("low" as const),
+        time: event.DateTime,
+        height: event.Height ?? null,
+      }));
+
     const forecast = marineData.hourly.time.map((time, index) => {
       const wind = weatherByTime.get(time);
       const windDirection = wind?.windDirection ?? null;
@@ -70,6 +78,7 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
     return {
       spot,
       forecast,
+      tideEvents,
     };
   } catch {
     throw new ForecastServiceError();
