@@ -7,5 +7,11 @@ export const marineForecast: OpenMeteoMarineResponse = {
     wave_height: [1.2, 1.3],
     wave_period: [9, 9.5],
     wave_direction: [275, 280],
+    swell_wave_height: [1.1, 1.2],
+    swell_wave_period: [9.5, 10],
+    swell_wave_direction: [270, 275],
+    secondary_swell_wave_height: [0.8, 0.9],
+    secondary_swell_wave_period: [10.5, 11],
+    secondary_swell_wave_direction: [280, 285],
   },
 };

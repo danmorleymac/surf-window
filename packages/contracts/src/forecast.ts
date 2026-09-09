@@ -3,6 +3,12 @@ import { SpotSchema } from "./spots.js";
 
 // Shared API contract used by both Fastify and React.
 export const ForecastHourSchema = z.object({
+  swellHeight: z.number().nullable(),
+  swellPeriod: z.number().nullable(),
+  swellDirection: z.number().nullable(),
+  secondarySwellHeight: z.number().nullable(),
+  secondarySwellPeriod: z.number().nullable(),
+  secondarySwellDirection: z.number().nullable(),
   tideState: z.enum(["rising", "falling"]).nullable(),
   time: z.string(),
   waveHeight: z.number().nullable(),

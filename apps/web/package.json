@@ -11,8 +11,11 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@tanstack/react-query": "^5.101.4",
+    "@mantine/core": "^9.6.1",
+    "@mantine/hooks": "^9.6.1",
     "@surf-window/contracts": "0.0.0",
+    "@tanstack/react-query": "^5.101.4",
+    "@tanstack/react-table": "^9.2.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "zod": "^4.4.3"
@@ -28,6 +31,9 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "globals": "^17.7.0",
+    "postcss": "^8.5.28",
+    "postcss-preset-mantine": "^1.18.0",
+    "postcss-simple-vars": "^7.0.1",
     "typescript": "~6.0.2",
     "typescript-eslint": "^8.62.0",
     "vite": "^8.1.1"

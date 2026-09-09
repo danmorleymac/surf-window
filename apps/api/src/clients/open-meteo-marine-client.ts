@@ -5,7 +5,17 @@ export async function fetchMarineForecast(latitude: number, longitude: number) {
   const searchParams = new URLSearchParams({
     latitude: latitude.toString(),
     longitude: longitude.toString(),
-    hourly: ["wave_height", "wave_period", "wave_direction"].join(","),
+    hourly: [
+      "wave_height",
+      "wave_period",
+      "wave_direction",
+      "swell_wave_height",
+      "swell_wave_period",
+      "swell_wave_direction",
+      "secondary_swell_wave_height",
+      "secondary_swell_wave_period",
+      "secondary_swell_wave_direction",
+    ].join(","),
     timezone: "GMT",
     forecast_days: "7",
   });

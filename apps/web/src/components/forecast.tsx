@@ -36,7 +36,7 @@ export function Forecast({ spotId }: ForecastProps) {
     (event) => event.time.slice(0, 10) === currentDay
   );
 
-  const remainingForecasts = getRemainingForecastsToday(data.forecast);
+  const remainingForecasts = getRemainingForecastsToday(data.forecast, 2);
 
   if (!currentForecast) {
     return <p>No upcoming forecast available.</p>;
@@ -60,19 +60,31 @@ export function Forecast({ spotId }: ForecastProps) {
 
         <p>Wave height: {currentForecast.waveHeight ?? "Unknown"} m</p>
 
-        <p>Wave period: {currentForecast.wavePeriod ?? "Unknown"} s</p>
-
         <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
+        <p>
+          Primary swell:{" "}
+          {currentForecast.swellHeight !== null &&
+          currentForecast.swellPeriod !== null &&
+          currentForecast.swellDirection !== null
+            ? `${currentForecast.swellHeight} m @ ${currentForecast.swellPeriod} s · ${currentForecast.swellDirection}°`
+            : "Unknown"}
+        </p>
+
+        {currentForecast.secondarySwellHeight !== null &&
+          currentForecast.secondarySwellPeriod !== null &&
+          currentForecast.secondarySwellDirection !== null && (
+            <p>
+              Secondary swell: {currentForecast.secondarySwellHeight} m @{" "}
+              {currentForecast.secondarySwellPeriod} s · {currentForecast.secondarySwellDirection}°
+            </p>
+          )}
 
         <p>Wind: {currentForecast.windSpeedKmh ?? "Unknown"} km/h</p>
 
         <p>Wind direction: {currentForecast.windDirection ?? "Unknown"}°</p>
 
         <p>Wind condition: {currentForecast.windCondition ?? "Unknown"}</p>
-
-        <button type="button" onClick={() => void refetch()}>
-          Refresh
-        </button>
+        <p>Tide: {currentForecast.tideState ?? "Unknown"}</p>
       </section>
       <TideEvents events={todaysTideEvents} />
       <HourlyForecast forecast={remainingForecasts} />

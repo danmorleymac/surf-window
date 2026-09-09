@@ -91,6 +91,12 @@ describe("GET /api/spots/:spotId/forecast", () => {
       },
       forecast: [
         {
+          swellHeight: 1.1,
+          swellPeriod: 9.5,
+          swellDirection: 270,
+          secondarySwellHeight: 0.8,
+          secondarySwellPeriod: 10.5,
+          secondarySwellDirection: 280,
           tideState: "rising",
           time: "2026-08-16T12:00",
           waveHeight: 1.2,
@@ -101,6 +107,12 @@ describe("GET /api/spots/:spotId/forecast", () => {
           windCondition: "cross-onshore",
         },
         {
+          swellHeight: 1.2,
+          swellPeriod: 10,
+          swellDirection: 275,
+          secondarySwellHeight: 0.9,
+          secondarySwellPeriod: 11,
+          secondarySwellDirection: 285,
           tideState: "rising",
           time: "2026-08-16T13:00",
           waveHeight: 1.3,
@@ -185,6 +197,12 @@ describe("GET /api/spots/:spotId/forecast", () => {
       },
       forecast: [
         {
+          swellHeight: 1.1,
+          swellPeriod: 9.5,
+          swellDirection: 270,
+          secondarySwellHeight: 0.8,
+          secondarySwellPeriod: 10.5,
+          secondarySwellDirection: 280,
           tideState: null,
           time: "2026-08-16T12:00",
           waveHeight: 1.2,
@@ -195,6 +213,12 @@ describe("GET /api/spots/:spotId/forecast", () => {
           windCondition: null,
         },
         {
+          swellHeight: 1.2,
+          swellPeriod: 10,
+          swellDirection: 275,
+          secondarySwellHeight: 0.9,
+          secondarySwellPeriod: 11,
+          secondarySwellDirection: 285,
           tideState: null,
           time: "2026-08-16T13:00",
           waveHeight: 1.3,

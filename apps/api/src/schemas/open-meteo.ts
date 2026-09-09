@@ -1,5 +1,3 @@
-// src/schemas/forecast.ts
-
 import { z } from "zod";
 
 export const OpenMeteoMarineResponseSchema = z.object({
@@ -8,6 +6,12 @@ export const OpenMeteoMarineResponseSchema = z.object({
     wave_height: z.array(z.number().nullable()),
     wave_period: z.array(z.number().nullable()),
     wave_direction: z.array(z.number().nullable()),
+    swell_wave_height: z.array(z.number().nullable()),
+    swell_wave_period: z.array(z.number().nullable()),
+    swell_wave_direction: z.array(z.number().nullable()),
+    secondary_swell_wave_height: z.array(z.number().nullable()),
+    secondary_swell_wave_period: z.array(z.number().nullable()),
+    secondary_swell_wave_direction: z.array(z.number().nullable()),
   }),
 });
 
