@@ -43,8 +43,14 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
     // Tide data is optional. A UKHO failure should not prevent the forecast from being returned.
     try {
       tidalEvents = await getTidalEvents(spot.tidalStationId);
-    } catch {
-      // Tide enriches the forecast, but is not required.
+    } catch (error) {
+      console.error("UKHO tide request failed:", error);
+    }
+
+    try {
+      tidalEvents = await getTidalEvents(spot.tidalStationId);
+    } catch (error) {
+      console.error("UKHO tide request failed:", error);
     }
 
     const tideEvents = tidalEvents
@@ -86,7 +92,8 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       forecast,
       tideEvents,
     };
-  } catch {
+  } catch (error) {
+    console.error("Forecast service failed:", error);
     throw new ForecastServiceError();
   }
 }

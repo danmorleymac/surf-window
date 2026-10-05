@@ -1,8 +1,6 @@
 const latitude = 52.93;
 const longitude = 1.3;
 
-const targetTime = "2026-09-08T12:00";
-const models = ["ecmwf_wam", "ncep_gfswave016", "ewam"];
 const allModels = [
   "best_match",
   "ecmwf_wam025",

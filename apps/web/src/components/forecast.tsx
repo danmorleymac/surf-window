@@ -1,9 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-
-import { getNextForecast, getRemainingForecastsToday } from "../lib/forecast";
+import { formatForecastDay, getNextForecast, groupForecastByDay } from "../lib/forecast";
 import { forecastQueryOptions } from "../query-options/forecast";
-import { HourlyForecast } from "./hourly-forecast";
-import { TideEvents } from "./tide-event";
+import { ForecastDay } from "./forecast-day";
+import { TideSummary } from "./tide-summary";
 
 type ForecastProps = {
   spotId: string;
@@ -30,17 +29,17 @@ export function Forecast({ spotId }: ForecastProps) {
 
   const currentForecast = getNextForecast(data.forecast);
 
-  const currentDay = new Date(`${currentForecast?.time}Z`).toISOString().slice(0, 10);
+  if (!currentForecast) {
+    return <p>No upcoming forecast available.</p>;
+  }
+
+  const forecastByDay = groupForecastByDay(data.forecast);
+
+  const currentDay = currentForecast.time.slice(0, 10);
 
   const todaysTideEvents = data.tideEvents.filter(
     (event) => event.time.slice(0, 10) === currentDay
   );
-
-  const remainingForecasts = getRemainingForecastsToday(data.forecast, 2);
-
-  if (!currentForecast) {
-    return <p>No upcoming forecast available.</p>;
-  }
 
   return (
     <>
@@ -59,8 +58,8 @@ export function Forecast({ spotId }: ForecastProps) {
         </p>
 
         <p>Wave height: {currentForecast.waveHeight ?? "Unknown"} m</p>
-
         <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
+
         <p>
           Primary swell:{" "}
           {currentForecast.swellHeight !== null &&
@@ -80,14 +79,25 @@ export function Forecast({ spotId }: ForecastProps) {
           )}
 
         <p>Wind: {currentForecast.windSpeedKmh ?? "Unknown"} km/h</p>
-
         <p>Wind direction: {currentForecast.windDirection ?? "Unknown"}°</p>
-
         <p>Wind condition: {currentForecast.windCondition ?? "Unknown"}</p>
         <p>Tide: {currentForecast.tideState ?? "Unknown"}</p>
       </section>
-      <TideEvents events={todaysTideEvents} />
-      <HourlyForecast forecast={remainingForecasts} />
+
+      <TideSummary events={todaysTideEvents} />
+
+      {Object.entries(forecastByDay).map(([date, forecast]) => {
+        const tideEvents = data.tideEvents.filter((event) => event.time.slice(0, 10) === date);
+
+        return (
+          <ForecastDay
+            key={date}
+            forecast={forecast}
+            tideEvents={tideEvents}
+            title={formatForecastDay(date)}
+          />
+        );
+      })}
     </>
   );
 }

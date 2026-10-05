@@ -27,3 +27,37 @@ export function getRemainingForecastsToday(forecast: ForecastHour[], intervalHou
     })
     .filter((_, index) => index % intervalHours === 0);
 }
+
+export function groupForecastByDay(forecast: ForecastHour[]) {
+  return forecast.reduce<Record<string, ForecastHour[]>>((days, item) => {
+    const date = item.time.slice(0, 10);
+
+    days[date] ??= [];
+    days[date].push(item);
+
+    return days;
+  }, {});
+}
+
+export function formatForecastDay(date: string) {
+  const today = new Date().toISOString().slice(0, 10);
+
+  const tomorrow = new Date();
+  tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
+  const tomorrowDate = tomorrow.toISOString().slice(0, 10);
+
+  if (date === today) {
+    return "Today";
+  }
+
+  if (date === tomorrowDate) {
+    return "Tomorrow";
+  }
+
+  return new Date(`${date}T00:00:00Z`).toLocaleDateString("en-GB", {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    timeZone: "UTC",
+  });
+}
