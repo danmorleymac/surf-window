@@ -10,6 +10,12 @@ function App() {
 
   const { data: spots, isPending, error } = useQuery(spotsQueryOptions());
 
+  const spotsByRegion = spots?.reduce<Record<string, typeof spots>>((regions, spot) => {
+    regions[spot.region] ??= [];
+    regions[spot.region].push(spot);
+    return regions;
+  }, {});
+
   const {
     isFavourite,
     addFavourite,
@@ -39,11 +45,16 @@ function App() {
           setSelectedSpotId(event.target.value);
         }}
       >
-        {spots.map((spot) => (
-          <option key={spot.id} value={spot.id}>
-            {spot.name}
-          </option>
-        ))}
+        {spotsByRegion &&
+          Object.entries(spotsByRegion).map(([region, regionSpots]) => (
+            <optgroup key={region} label={region}>
+              {regionSpots.map((spot) => (
+                <option key={spot.id} value={spot.id}>
+                  {spot.name}
+                </option>
+              ))}
+            </optgroup>
+          ))}
       </select>
 
       <button

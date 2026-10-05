@@ -6,6 +6,7 @@ export const surfSpots = pgTable("surf_spots", {
   latitude: doublePrecision("latitude").notNull(),
   longitude: doublePrecision("longitude").notNull(),
   // Approximate bearing from the shore towards the sea, in degrees.
+  region: text("region").notNull(),
   shoreBearing: integer("shore_bearing").notNull(),
   // UKHO tidal station used as the reference for this surf spot.
   tidalStationId: text("tidal_station_id").notNull(),

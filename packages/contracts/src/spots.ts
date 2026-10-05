@@ -3,6 +3,7 @@ import { z } from "zod";
 export const SpotSchema = z.object({
   id: z.string(),
   name: z.string(),
+  region: z.string(),
   latitude: z.number(),
   longitude: z.number(),
 });

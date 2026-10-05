@@ -5,41 +5,19 @@ import { surfSpots } from "./schema.js";
 
 const spots = [
   {
-    id: "croyde",
-    name: "Croyde",
-    latitude: 51.13,
-    longitude: -4.24,
-    shoreBearing: 270,
-    tidalStationId: "0536",
-  },
-  {
-    id: "saunton",
-    name: "Saunton Sands",
-    latitude: 51.12,
-    longitude: -4.22,
-    shoreBearing: 270,
-    tidalStationId: "0536",
-  },
-  {
-    id: "woolacombe",
-    name: "Woolacombe",
-    latitude: 51.17,
-    longitude: -4.21,
-    shoreBearing: 270,
-    tidalStationId: "0535",
-  },
-
-  {
     id: "joss-bay",
     name: "Joss Bay",
+    region: "Kent",
     latitude: 51.38,
     longitude: 1.45,
     shoreBearing: 70,
     tidalStationId: "0102A",
   },
+
   {
     id: "brighton",
     name: "Brighton",
+    region: "Sussex",
     latitude: 50.82,
     longitude: -0.14,
     shoreBearing: 180,
@@ -48,6 +26,7 @@ const spots = [
   {
     id: "brighton-marina",
     name: "Brighton Marina",
+    region: "Sussex",
     latitude: 50.81,
     longitude: -0.1,
     shoreBearing: 160,
@@ -56,6 +35,7 @@ const spots = [
   {
     id: "eastbourne",
     name: "Eastbourne",
+    region: "Sussex",
     latitude: 50.76,
     longitude: 0.29,
     shoreBearing: 160,
@@ -64,6 +44,7 @@ const spots = [
   {
     id: "east-wittering",
     name: "East Wittering",
+    region: "Sussex",
     latitude: 50.77,
     longitude: -0.87,
     shoreBearing: 190,
@@ -72,6 +53,7 @@ const spots = [
   {
     id: "bracklesham",
     name: "Bracklesham Bay",
+    region: "Sussex",
     latitude: 50.76,
     longitude: -0.85,
     shoreBearing: 190,
@@ -81,6 +63,7 @@ const spots = [
   {
     id: "bournemouth",
     name: "Bournemouth",
+    region: "Dorset",
     latitude: 50.72,
     longitude: -1.88,
     shoreBearing: 180,
@@ -89,6 +72,7 @@ const spots = [
   {
     id: "bournemouth-pier",
     name: "Bournemouth Pier",
+    region: "Dorset",
     latitude: 50.72,
     longitude: -1.88,
     shoreBearing: 170,
@@ -97,6 +81,7 @@ const spots = [
   {
     id: "boscombe",
     name: "Boscombe",
+    region: "Dorset",
     latitude: 50.72,
     longitude: -1.84,
     shoreBearing: 170,
@@ -105,6 +90,7 @@ const spots = [
   {
     id: "southbourne",
     name: "Southbourne",
+    region: "Dorset",
     latitude: 50.72,
     longitude: -1.8,
     shoreBearing: 170,
@@ -113,6 +99,7 @@ const spots = [
   {
     id: "kimmeridge",
     name: "Kimmeridge",
+    region: "Dorset",
     latitude: 50.62,
     longitude: -2.12,
     shoreBearing: 200,
@@ -120,8 +107,37 @@ const spots = [
   },
 
   {
+    id: "croyde",
+    name: "Croyde",
+    region: "North Devon",
+    latitude: 51.13,
+    longitude: -4.24,
+    shoreBearing: 270,
+    tidalStationId: "0536",
+  },
+  {
+    id: "saunton",
+    name: "Saunton Sands",
+    region: "North Devon",
+    latitude: 51.12,
+    longitude: -4.22,
+    shoreBearing: 270,
+    tidalStationId: "0536",
+  },
+  {
+    id: "woolacombe",
+    name: "Woolacombe",
+    region: "North Devon",
+    latitude: 51.17,
+    longitude: -4.21,
+    shoreBearing: 270,
+    tidalStationId: "0535",
+  },
+
+  {
     id: "cromer",
     name: "Cromer",
+    region: "Norfolk",
     latitude: 52.93,
     longitude: 1.3,
     shoreBearing: 25,
@@ -138,6 +154,7 @@ async function seed(): Promise<void> {
       target: surfSpots.id,
       set: {
         name: sql`excluded.name`,
+        region: sql`excluded.region`,
         latitude: sql`excluded.latitude`,
         longitude: sql`excluded.longitude`,
         shoreBearing: sql`excluded.shore_bearing`,
