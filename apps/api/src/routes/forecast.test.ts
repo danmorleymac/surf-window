@@ -88,6 +88,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
         name: croydeSpot.name,
         latitude: croydeSpot.latitude,
         longitude: croydeSpot.longitude,
+        region: croydeSpot.region,
       },
       forecast: [
         {
@@ -194,6 +195,7 @@ describe("GET /api/spots/:spotId/forecast", () => {
         name: croydeSpot.name,
         latitude: croydeSpot.latitude,
         longitude: croydeSpot.longitude,
+        region: croydeSpot.region,
       },
       forecast: [
         {

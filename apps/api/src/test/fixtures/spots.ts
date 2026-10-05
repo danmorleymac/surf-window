@@ -7,6 +7,7 @@ export const croydeSpot: SurfSpot = {
   name: "Croyde",
   latitude: 51.13,
   longitude: -4.24,
+  region: "Devon",
   shoreBearing: 270,
   tidalStationId: "0535",
 };
@@ -18,6 +19,7 @@ export const surfSpots = [
     name: "Saunton Sands",
     latitude: 51.12,
     longitude: -4.22,
+    region: "Devon",
     shoreBearing: 270,
     tidalStationId: "0535",
   },

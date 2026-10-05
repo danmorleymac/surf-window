@@ -39,11 +39,12 @@ describe("GET /api/spots", () => {
     expect(mockedGetAllSpots).toHaveBeenCalledOnce();
 
     expect(response.json()).toEqual(
-      surfSpots.map(({ id, name, latitude, longitude }) => ({
+      surfSpots.map(({ id, name, latitude, longitude, region }) => ({
         id,
         name,
         latitude,
         longitude,
+        region,
       }))
     );
   });
