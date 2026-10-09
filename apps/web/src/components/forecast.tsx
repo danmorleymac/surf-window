@@ -3,12 +3,15 @@ import { formatForecastDay, getNextForecast, groupForecastByDay } from "../lib/f
 import { forecastQueryOptions } from "../query-options/forecast";
 import { ForecastDay } from "./forecast-day";
 import { TideSummary } from "./tide-summary";
+import { usePreferences } from "../context/use-preferences";
+import { formatHeight, formatWindSpeed } from "../lib/units";
 
 type ForecastProps = {
   spotId: string;
 };
 
 export function Forecast({ spotId }: ForecastProps) {
+  const { heightUnit, windSpeedUnit } = usePreferences();
   const { data, error, isPending, isFetching, refetch } = useQuery(forecastQueryOptions(spotId));
 
   if (isPending) {
@@ -57,7 +60,9 @@ export function Forecast({ spotId }: ForecastProps) {
           })}
         </p>
 
-        <p>Wave height: {currentForecast.waveHeight ?? "Unknown"} m</p>
+        <p>
+          Wave height: {currentForecast.waveHeight ?? "Unknown"} {heightUnit}
+        </p>
         <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
 
         <p>
@@ -65,7 +70,7 @@ export function Forecast({ spotId }: ForecastProps) {
           {currentForecast.swellHeight !== null &&
           currentForecast.swellPeriod !== null &&
           currentForecast.swellDirection !== null
-            ? `${currentForecast.swellHeight} m @ ${currentForecast.swellPeriod} s · ${currentForecast.swellDirection}°`
+            ? `${formatHeight(currentForecast.swellHeight, heightUnit)} @ ${Math.round(currentForecast.swellPeriod)} s · ${currentForecast.swellDirection}°`
             : "Unknown"}
         </p>
 
@@ -73,12 +78,22 @@ export function Forecast({ spotId }: ForecastProps) {
           currentForecast.secondarySwellPeriod !== null &&
           currentForecast.secondarySwellDirection !== null && (
             <p>
-              Secondary swell: {currentForecast.secondarySwellHeight} m @{" "}
-              {currentForecast.secondarySwellPeriod} s · {currentForecast.secondarySwellDirection}°
+              Secondary swell:{" "}
+              {currentForecast.secondarySwellHeight !== null
+                ? `${formatHeight(currentForecast.secondarySwellHeight, heightUnit)} @ ${Math.round(currentForecast.secondarySwellPeriod)} s`
+                : "Unknown"}
+              {currentForecast.secondarySwellDirection !== null
+                ? ` · ${currentForecast.secondarySwellDirection}°`
+                : ""}
             </p>
           )}
 
-        <p>Wind: {currentForecast.windSpeedKmh ?? "Unknown"} km/h</p>
+        <p>
+          Wind:{" "}
+          {currentForecast.windSpeedKmh !== null
+            ? formatWindSpeed(currentForecast.windSpeedKmh, windSpeedUnit)
+            : "Unknown"}
+        </p>
         <p>Wind direction: {currentForecast.windDirection ?? "Unknown"}°</p>
         <p>Wind condition: {currentForecast.windCondition ?? "Unknown"}</p>
         <p>Tide: {currentForecast.tideState ?? "Unknown"}</p>

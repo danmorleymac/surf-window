@@ -1,8 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-
 import { Forecast } from "./components/forecast";
-import { useFavourites } from "./hooks/use-favourites";
 import { spotsQueryOptions } from "./query-options/spots";
 
 function App() {
@@ -15,14 +13,6 @@ function App() {
     regions[spot.region].push(spot);
     return regions;
   }, {});
-
-  const {
-    isFavourite,
-    addFavourite,
-    removeFavourite,
-    isPending: isFavouritePending,
-    error: favouriteError,
-  } = useFavourites(selectedSpotId);
 
   if (isPending) {
     return <p>Loading spots...</p>;
@@ -56,26 +46,6 @@ function App() {
             </optgroup>
           ))}
       </select>
-
-      <button
-        type="button"
-        disabled={isFavouritePending}
-        onClick={() => {
-          if (isFavourite) {
-            removeFavourite(selectedSpotId);
-          } else {
-            addFavourite(selectedSpotId);
-          }
-        }}
-      >
-        {isFavouritePending ? "Updating..." : isFavourite ? "★ Favourite" : "☆ Favourite"}
-      </button>
-
-      {favouriteError && (
-        <p>
-          {favouriteError instanceof Error ? favouriteError.message : "Unable to update favourite"}
-        </p>
-      )}
 
       <Forecast spotId={selectedSpotId} />
     </main>

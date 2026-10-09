@@ -15,6 +15,7 @@
     "@mantine/hooks": "^9.6.1",
     "@surf-window/contracts": "0.0.0",
     "@tanstack/react-query": "^5.101.4",
+    "@tanstack/react-router": "^1.170.41",
     "@tanstack/react-table": "^9.2.4",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -23,6 +24,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@tanstack/react-query-devtools": "^5.101.4",
+    "@tanstack/router-plugin": "^1.168.42",
     "@types/node": "^24.13.2",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
