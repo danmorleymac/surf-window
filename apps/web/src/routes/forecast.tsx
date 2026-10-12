@@ -1,9 +1,14 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Forecast } from "./components/forecast";
-import { spotsQueryOptions } from "./query-options/spots";
+import { Forecast } from "../components/forecast";
+import { spotsQueryOptions } from "../query-options/spots";
 
-function App() {
+export const Route = createFileRoute("/forecast")({
+  component: ForecastPage,
+});
+
+function ForecastPage() {
   const [selectedSpotId, setSelectedSpotId] = useState("croyde");
 
   const { data: spots, isPending, error } = useQuery(spotsQueryOptions());
@@ -24,8 +29,6 @@ function App() {
 
   return (
     <main>
-      <h1>Surf Window</h1>
-
       <label htmlFor="spot">Surf spot</label>
 
       <select
@@ -51,5 +54,3 @@ function App() {
     </main>
   );
 }
-
-export default App;

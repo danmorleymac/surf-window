@@ -1,5 +1,3 @@
-/* eslint-disable react-refresh/only-export-components */
-
 import { SegmentedControl, Stack, Text, Title } from "@mantine/core";
 import { createFileRoute } from "@tanstack/react-router";
 
@@ -11,8 +9,7 @@ export const Route = createFileRoute("/settings")({
 });
 
 function SettingsPage() {
-  const { heightUnit, setHeightUnit } = usePreferences();
-  const { windSpeedUnit, setWindSpeedUnit } = usePreferences();
+  const { heightUnit, setHeightUnit, windSpeedUnit, setWindSpeedUnit } = usePreferences();
 
   return (
     <Stack>
