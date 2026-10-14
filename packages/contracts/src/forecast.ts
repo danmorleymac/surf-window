@@ -9,6 +9,8 @@ export const ForecastHourSchema = z.object({
   secondarySwellHeight: z.number().nullable(),
   secondarySwellPeriod: z.number().nullable(),
   secondarySwellDirection: z.number().nullable(),
+  surfScore: z.number(),
+  surfRating: z.enum(["poor", "fair", "good", "excellent"]),
   tideState: z.enum(["rising", "falling"]).nullable(),
   time: z.string(),
   waveHeight: z.number().nullable(),

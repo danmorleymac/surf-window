@@ -6,10 +6,10 @@ import { fetchMarineForecast } from "../clients/open-meteo-marine-client.js";
 import { fetchWeatherForecast } from "../clients/open-meteo-weather-client.js";
 import { getTidalEvents } from "../clients/ukho-tidal-client.js";
 import { getSpotById } from "../db/queries/spots.js";
-import { marineForecast } from "../test/fixtures/marine-forecast.js";
-import { weatherForecast } from "../test/fixtures/weather-forecast.js";
 import { croydeSpot } from "../test/fixtures/spots.js";
+import { marineForecast } from "../test/fixtures/marine-forecast.js";
 import { tidalEvents } from "../test/fixtures/tide-events.js";
+import { weatherForecast } from "../test/fixtures/weather-forecast.js";
 
 // Mock external/data boundaries while keeping the route, service, and domain logic real.
 // This lets the tests verify how provider data is transformed into our public API response.
@@ -98,6 +98,8 @@ describe("GET /api/spots/:spotId/forecast", () => {
           secondarySwellHeight: 0.8,
           secondarySwellPeriod: 10.5,
           secondarySwellDirection: 280,
+          surfScore: 67,
+          surfRating: "good",
           tideState: "rising",
           time: "2026-08-16T12:00",
           waveHeight: 1.2,
@@ -114,6 +116,8 @@ describe("GET /api/spots/:spotId/forecast", () => {
           secondarySwellHeight: 0.9,
           secondarySwellPeriod: 11,
           secondarySwellDirection: 285,
+          surfScore: 65,
+          surfRating: "good",
           tideState: "rising",
           time: "2026-08-16T13:00",
           waveHeight: 1.3,
@@ -205,6 +209,8 @@ describe("GET /api/spots/:spotId/forecast", () => {
           secondarySwellHeight: 0.8,
           secondarySwellPeriod: 10.5,
           secondarySwellDirection: 280,
+          surfScore: 57,
+          surfRating: "fair",
           tideState: null,
           time: "2026-08-16T12:00",
           waveHeight: 1.2,
@@ -221,6 +227,8 @@ describe("GET /api/spots/:spotId/forecast", () => {
           secondarySwellHeight: 0.9,
           secondarySwellPeriod: 11,
           secondarySwellDirection: 285,
+          surfScore: 65,
+          surfRating: "good",
           tideState: null,
           time: "2026-08-16T13:00",
           waveHeight: 1.3,

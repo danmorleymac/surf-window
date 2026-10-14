@@ -7,6 +7,7 @@ import type { SurfSpot } from "../db/schema.js";
 import { getTideState } from "../domain/tide-state.js";
 import { getWindCondition } from "../domain/wind-condition.js";
 import { ForecastServiceError } from "../errors/forecast-service-error.js";
+import { getSurfScore } from "../domain/surf-score.js";
 
 export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastResponse> {
   try {
@@ -47,12 +48,6 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       console.error("UKHO tide request failed:", error);
     }
 
-    try {
-      tidalEvents = await getTidalEvents(spot.tidalStationId);
-    } catch (error) {
-      console.error("UKHO tide request failed:", error);
-    }
-
     const tideEvents = tidalEvents
       .filter((event): event is typeof event & { DateTime: string } => event.DateTime !== undefined)
       .map((event) => ({
@@ -65,8 +60,20 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       const wind = weatherByTime.get(time);
       const windDirection = wind?.windDirection ?? null;
 
+      const waveHeight = marineData.hourly.wave_height[index] ?? null;
+      const swellPeriod = marineData.hourly.swell_wave_period[index] ?? null;
+
+      const windCondition =
+        windDirection === null ? null : getWindCondition(windDirection, spot.shoreBearing);
+
       const tideState =
         tidalEvents.length === 0 ? null : getTideState(new Date(`${time}Z`), tidalEvents);
+
+      const { score: surfScore, rating: surfRating } = getSurfScore({
+        waveHeight,
+        swellPeriod,
+        windCondition,
+      });
 
       return {
         time,
@@ -74,16 +81,17 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
         secondarySwellPeriod: marineData.hourly.secondary_swell_wave_period[index] ?? null,
         secondarySwellDirection: marineData.hourly.secondary_swell_wave_direction[index] ?? null,
         swellHeight: marineData.hourly.swell_wave_height[index] ?? null,
-        swellPeriod: marineData.hourly.swell_wave_period[index] ?? null,
+        swellPeriod,
         swellDirection: marineData.hourly.swell_wave_direction[index] ?? null,
-        waveHeight: marineData.hourly.wave_height[index] ?? null,
+        waveHeight,
         wavePeriod: marineData.hourly.wave_period[index] ?? null,
         waveDirection: marineData.hourly.wave_direction[index] ?? null,
         windSpeedKmh: wind?.windSpeedKmh ?? null,
         windDirection,
-        windCondition:
-          windDirection === null ? null : getWindCondition(windDirection, spot.shoreBearing),
+        windCondition,
         tideState,
+        surfScore,
+        surfRating,
       };
     });
 
