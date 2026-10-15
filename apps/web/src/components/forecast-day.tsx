@@ -90,6 +90,11 @@ export function ForecastDay({ forecast, tideEvents, title }: ForecastDayProps) {
       header: "Condition",
       cell: ({ row }) => row.original.windCondition ?? "—",
     },
+    {
+      accessorKey: "surfRating",
+      header: "Rating",
+      cell: ({ row }) => `${row.original.surfRating} · ${row.original.surfScore}`,
+    },
   ];
 
   const threeHourlyForecast = forecast.filter((item) => {

@@ -70,6 +70,7 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
         tidalEvents.length === 0 ? null : getTideState(new Date(`${time}Z`), tidalEvents);
 
       const { score: surfScore, rating: surfRating } = getSurfScore({
+        spotId: spot.id,
         waveHeight,
         swellPeriod,
         windCondition,

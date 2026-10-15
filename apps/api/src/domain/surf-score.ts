@@ -1,6 +1,9 @@
+import { getSpotScoreAdjustments } from "./spot-score-adjustments.js";
+
 export type SurfRating = "poor" | "fair" | "good" | "excellent";
 
 export type SurfScoreInput = {
+  spotId: string;
   waveHeight: number | null;
   swellPeriod: number | null;
   windCondition: "onshore" | "cross-onshore" | "cross-shore" | "cross-offshore" | "offshore" | null;
@@ -59,12 +62,22 @@ function getRating(score: number): SurfRating {
 }
 
 export function getSurfScore({
+  spotId,
   waveHeight,
   swellPeriod,
   windCondition,
 }: SurfScoreInput): SurfScore {
-  const score =
+  const baseScore =
     scoreWaveHeight(waveHeight) + scoreSwellPeriod(swellPeriod) + scoreWindCondition(windCondition);
+
+  const adjustments = getSpotScoreAdjustments(spotId, {
+    swellPeriod,
+    windCondition,
+  });
+
+  const adjustmentScore = adjustments.reduce((total, adjustment) => total + adjustment.points, 0);
+
+  const score = Math.max(0, Math.min(100, baseScore + adjustmentScore));
 
   return {
     score,
