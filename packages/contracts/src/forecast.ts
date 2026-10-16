@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { SpotSchema } from "./spots.js";
+import { SurfRatingSchema, WindConditionSchema } from "./enums.js";
 
 // Shared API contract used by both Fastify and React.
 export const ForecastHourSchema = z.object({
@@ -10,7 +11,7 @@ export const ForecastHourSchema = z.object({
   secondarySwellPeriod: z.number().nullable(),
   secondarySwellDirection: z.number().nullable(),
   surfScore: z.number(),
-  surfRating: z.enum(["poor", "fair", "good", "excellent"]),
+  surfRating: SurfRatingSchema,
   tideState: z.enum(["rising", "falling"]).nullable(),
   time: z.string(),
   waveHeight: z.number().nullable(),
@@ -18,9 +19,7 @@ export const ForecastHourSchema = z.object({
   waveDirection: z.number().nullable(),
   windSpeedKmh: z.number().nullable(),
   windDirection: z.number().nullable(),
-  windCondition: z
-    .enum(["onshore", "cross-onshore", "cross-shore", "cross-offshore", "offshore"])
-    .nullable(),
+  windCondition: WindConditionSchema.nullable(),
 });
 
 export const ForecastErrorSchema = z.object({

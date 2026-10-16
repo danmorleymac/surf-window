@@ -60,9 +60,7 @@ export function Forecast({ spotId }: ForecastProps) {
           })}
         </p>
 
-        <p>
-          Wave height: {currentForecast.waveHeight ?? "Unknown"} {heightUnit}
-        </p>
+        <p>Wave height: {formatHeight(currentForecast.waveHeight, heightUnit)}</p>
         <p>Direction: {currentForecast.waveDirection ?? "Unknown"}°</p>
 
         <p>

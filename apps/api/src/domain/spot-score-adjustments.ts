@@ -1,6 +1,8 @@
+import { WindCondition } from "@surf-window/contracts";
+
 export type SpotScoreConditions = {
   swellPeriod: number | null;
-  windCondition: "onshore" | "cross-onshore" | "cross-shore" | "cross-offshore" | "offshore" | null;
+  windCondition: WindCondition | null;
 };
 
 export type ScoreAdjustment = {

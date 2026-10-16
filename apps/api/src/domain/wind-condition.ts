@@ -1,9 +1,4 @@
-export type WindCondition =
-  | "offshore"
-  | "cross-offshore"
-  | "cross-shore"
-  | "cross-onshore"
-  | "onshore";
+import type { WindCondition } from "@surf-window/contracts";
 
 function angleDifference(a: number, b: number): number {
   const difference = Math.abs(a - b) % 360;

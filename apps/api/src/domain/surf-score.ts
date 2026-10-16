@@ -1,12 +1,11 @@
+import { SurfRating, WindCondition } from "@surf-window/contracts";
 import { getSpotScoreAdjustments } from "./spot-score-adjustments.js";
-
-export type SurfRating = "poor" | "fair" | "good" | "excellent";
 
 export type SurfScoreInput = {
   spotId: string;
   waveHeight: number | null;
   swellPeriod: number | null;
-  windCondition: "onshore" | "cross-onshore" | "cross-shore" | "cross-offshore" | "offshore" | null;
+  windCondition: WindCondition | null;
 };
 
 export type SurfScore = {
