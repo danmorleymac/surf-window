@@ -21,12 +21,14 @@ export function getBestForecastByDay(forecast: ForecastHour[]): DailyBestForecas
     const date = item.time.slice(0, 10);
     const hour = new Date(`${item.time}Z`).getUTCHours();
 
+    // Only consider practical daytime surf windows for the outlook.
     if (hour < DAYTIME_START_HOUR || hour > DAYTIME_END_HOUR) {
       continue;
     }
 
     const currentBest = bestByDay.get(date);
 
+    // Keep only the highest-scoring forecast hour for each day.
     if (!currentBest || item.surfScore > currentBest.surfScore) {
       bestByDay.set(date, item);
     }
@@ -39,6 +41,7 @@ export function getBestForecastByDay(forecast: ForecastHour[]): DailyBestForecas
 }
 
 export function rankSpotDailyForecasts(forecasts: SpotDailyBest[]): SpotDailyBest[] {
+  // Sort a copy so callers keep their original forecast order.
   return [...forecasts].sort((a, b) => b.forecast.surfScore - a.forecast.surfScore);
 }
 
