@@ -14,6 +14,16 @@ export type SpotDailyBest = {
   forecast: ForecastHour;
 };
 
+export type WeekendDates = {
+  saturday: string;
+  sunday: string;
+};
+
+export type WeekendOutlook = {
+  saturday: SpotDailyBest[];
+  sunday: SpotDailyBest[];
+};
+
 export function getBestForecastByDay(forecast: ForecastHour[]): DailyBestForecast[] {
   const bestByDay = new Map<string, ForecastHour>();
 
@@ -45,33 +55,64 @@ export function rankSpotDailyForecasts(forecasts: SpotDailyBest[]): SpotDailyBes
   return [...forecasts].sort((a, b) => b.forecast.surfScore - a.forecast.surfScore);
 }
 
-export type WeekendOutlook = {
-  saturday: SpotDailyBest[];
-  sunday: SpotDailyBest[];
-};
+export function deduplicateSpotDailyForecasts(forecasts: SpotDailyBest[]): SpotDailyBest[] {
+  const seen = new Set<string>();
 
-export function getWeekendOutlook(forecasts: SpotDailyBest[]): WeekendOutlook {
-  const saturday: SpotDailyBest[] = [];
-  const sunday: SpotDailyBest[] = [];
+  return forecasts.filter((item) => {
+    // Collapse equivalent recommendations only within the same region.
+    const key = [
+      item.spot.region,
+      item.date,
+      item.forecast.time,
+      item.forecast.surfScore,
+      item.forecast.waveHeight,
+      item.forecast.swellPeriod,
+      item.forecast.windCondition,
+    ].join("|");
 
-  for (const item of forecasts) {
-    const day = new Date(`${item.date}T00:00:00Z`).getUTCDay();
-
-    if (day === 6) {
-      saturday.push(item);
+    if (seen.has(key)) {
+      return false;
     }
 
-    if (day === 0) {
-      sunday.push(item);
-    }
-  }
+    seen.add(key);
+
+    return true;
+  });
+}
+
+export function getUpcomingWeekendDates(referenceDate: Date): WeekendDates {
+  const day = referenceDate.getUTCDay();
+  const daysUntilSaturday = (6 - day + 7) % 7;
+
+  const saturday = new Date(referenceDate);
+  saturday.setUTCDate(referenceDate.getUTCDate() + daysUntilSaturday);
+
+  const sunday = new Date(saturday);
+  sunday.setUTCDate(saturday.getUTCDate() + 1);
 
   return {
-    saturday: rankSpotDailyForecasts(saturday),
-    sunday: rankSpotDailyForecasts(sunday),
+    saturday: saturday.toISOString().slice(0, 10),
+    sunday: sunday.toISOString().slice(0, 10),
+  };
+}
+
+export function getWeekendOutlook(
+  forecasts: SpotDailyBest[],
+  weekendDates: WeekendDates
+): WeekendOutlook {
+  const saturday = forecasts.filter((item) => item.date === weekendDates.saturday);
+
+  const sunday = forecasts.filter((item) => item.date === weekendDates.sunday);
+
+  return {
+    saturday: deduplicateSpotDailyForecasts(rankSpotDailyForecasts(saturday)),
+    sunday: deduplicateSpotDailyForecasts(rankSpotDailyForecasts(sunday)),
   };
 }
 
 export function getBestOfWeek(forecasts: SpotDailyBest[], limit = 5): SpotDailyBest[] {
-  return rankSpotDailyForecasts(forecasts).slice(0, limit);
+  const ranked = rankSpotDailyForecasts(forecasts);
+  const deduplicated = deduplicateSpotDailyForecasts(ranked);
+
+  return deduplicated.slice(0, limit);
 }

@@ -6,9 +6,11 @@ describe("getSurfScore", () => {
   it("rates ideal-sized surf with a good period and offshore wind highly", () => {
     const result = getSurfScore({
       spotId: "croyde",
-      waveHeight: 1.5,
+      swellHeight: 1.5,
       swellPeriod: 10,
       windCondition: "offshore",
+      windSpeedKmh: 10,
+      windWaveHeight: 1.5,
     });
 
     expect(result).toEqual({
@@ -20,9 +22,11 @@ describe("getSurfScore", () => {
   it("penalises small surf and onshore wind", () => {
     const result = getSurfScore({
       spotId: "croyde",
-      waveHeight: 0.3,
+      swellHeight: 0.3,
       swellPeriod: 5,
       windCondition: "onshore",
+      windSpeedKmh: 10,
+      windWaveHeight: 0.1,
     });
 
     expect(result).toEqual({
@@ -31,10 +35,26 @@ describe("getSurfScore", () => {
     });
   });
 
+  it("penalises strong wind and dominant wind sea", () => {
+    const result = getSurfScore({
+      spotId: "croyde",
+      swellHeight: 1.34,
+      swellPeriod: 11,
+      windCondition: "cross-onshore",
+      windSpeedKmh: 58,
+      windWaveHeight: 3.9,
+    });
+
+    expect(result.score).toBeLessThan(50);
+    expect(result.rating).toBe("poor");
+  });
+
   it("does not automatically reward very large surf", () => {
     const result = getSurfScore({
       spotId: "croyde",
-      waveHeight: 3,
+      swellHeight: 3,
+      windSpeedKmh: 10,
+      windWaveHeight: 1.5,
       swellPeriod: 10,
       windCondition: "offshore",
     });
@@ -46,7 +66,9 @@ describe("getSurfScore", () => {
   it("handles missing forecast data", () => {
     const result = getSurfScore({
       spotId: "joss-bay",
-      waveHeight: null,
+      swellHeight: null,
+      windSpeedKmh: null,
+      windWaveHeight: null,
       swellPeriod: null,
       windCondition: null,
     });
@@ -60,7 +82,9 @@ describe("getSurfScore", () => {
   it("gives Joss Bay a bonus for onshore wind around a 7s period", () => {
     const result = getSurfScore({
       spotId: "joss-bay",
-      waveHeight: 1,
+      swellHeight: 1,
+      windSpeedKmh: 10,
+      windWaveHeight: 1.5,
       swellPeriod: 7,
       windCondition: "onshore",
     });
@@ -72,7 +96,9 @@ describe("getSurfScore", () => {
   it("gives Cromer a bonus for a 7–8s swell period", () => {
     const result = getSurfScore({
       spotId: "cromer",
-      waveHeight: 1,
+      swellHeight: 1,
+      windSpeedKmh: 10,
+      windWaveHeight: 1.5,
       swellPeriod: 7.5,
       windCondition: "cross-shore",
     });

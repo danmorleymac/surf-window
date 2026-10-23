@@ -73,6 +73,17 @@ export function ForecastDay({ forecast, tideEvents, title }: ForecastDayProps) {
       },
     },
     {
+      header: "Wind waves",
+      cell: ({ row }) => {
+        const forecast = row.original;
+
+        return `${formatHeight(
+          forecast.windWaveHeight,
+          heightUnit
+        )} @ ${forecast.windWavePeriod?.toFixed(0) ?? "—"}s`;
+      },
+    },
+    {
       id: "wind",
       header: "Wind",
       cell: ({ row }) => {

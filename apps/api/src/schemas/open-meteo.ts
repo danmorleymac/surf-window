@@ -12,6 +12,9 @@ export const OpenMeteoMarineResponseSchema = z.object({
     secondary_swell_wave_height: z.array(z.number().nullable()),
     secondary_swell_wave_period: z.array(z.number().nullable()),
     secondary_swell_wave_direction: z.array(z.number().nullable()),
+    wind_wave_height: z.array(z.number().nullable()),
+    wind_wave_period: z.array(z.number().nullable()),
+    wind_wave_direction: z.array(z.number().nullable()),
   }),
 });
 

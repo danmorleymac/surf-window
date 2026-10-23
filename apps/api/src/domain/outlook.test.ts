@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import {
   getBestForecastByDay,
   getBestOfWeek,
+  getUpcomingWeekendDates,
   getWeekendOutlook,
   rankSpotDailyForecasts,
   SpotDailyBest,
@@ -27,6 +28,9 @@ function createForecastHour(time: string, surfScore: number): ForecastHour {
     tideState: null,
     surfScore,
     surfRating: surfScore >= 65 ? "good" : "fair",
+    windWaveHeight: 1,
+    windWavePeriod: 8,
+    windWaveDirection: 270,
   };
 }
 
@@ -104,6 +108,15 @@ describe("getBestForecastByDay", () => {
     expect(result.map((item) => item.spot.id)).toEqual(["cromer", "croyde"]);
   });
 
+  it("returns the upcoming Saturday and Sunday", () => {
+    const result = getUpcomingWeekendDates(new Date("2026-10-19T12:00:00Z"));
+
+    expect(result).toEqual({
+      saturday: "2026-10-24",
+      sunday: "2026-10-25",
+    });
+  });
+
   it("returns ranked Saturday and Sunday forecasts", () => {
     const forecasts: SpotDailyBest[] = [
       {
@@ -141,7 +154,10 @@ describe("getBestForecastByDay", () => {
       },
     ];
 
-    const result = getWeekendOutlook(forecasts);
+    const result = getWeekendOutlook(forecasts, {
+      saturday: "2026-10-24",
+      sunday: "2026-10-25",
+    });
 
     expect(result.saturday.map((item: SpotDailyBest) => item.spot.id)).toEqual([
       "cromer",

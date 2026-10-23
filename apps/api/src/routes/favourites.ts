@@ -13,7 +13,7 @@ import {
 
 import { toFastifySchema } from "../schemas/to-fastify-schema.js";
 
-export function registerFavouriteRoutes(app: FastifyInstance): void {
+export function favouritesRoutes(app: FastifyInstance): void {
   app.get(
     "/api/favourites",
     {

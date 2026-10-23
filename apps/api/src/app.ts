@@ -2,11 +2,12 @@ import Fastify from "fastify";
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 
-import { registerForecastRoutes } from "./routes/forecast.js";
-import { registerHealthRoutes } from "./routes/health.js";
 import { errorHandler } from "./errors/error-handler.js";
-import { registerSpotRoutes } from "./routes/spots.js";
-import { registerFavouriteRoutes } from "./routes/favourites.js";
+import { favouritesRoutes } from "./routes/favourites.js";
+import { forecastRoutes } from "./routes/forecast.js";
+import { healthRoutes } from "./routes/health.js";
+import { outlookRoutes } from "./routes/outlook.js";
+import { spotsRoutes } from "./routes/spots.js";
 
 type BuildAppOptions = {
   logger?: boolean;
@@ -33,10 +34,11 @@ export async function buildApp({ logger = true }: BuildAppOptions = {}) {
 
   app.setErrorHandler(errorHandler);
 
-  registerHealthRoutes(app);
-  registerForecastRoutes(app);  
-  registerSpotRoutes(app);
-  registerFavouriteRoutes(app);
-  
+  await app.register(healthRoutes);
+  await app.register(forecastRoutes);
+  await app.register(spotsRoutes);
+  await app.register(favouritesRoutes);
+  await app.register(outlookRoutes);
+
   return app;
 }

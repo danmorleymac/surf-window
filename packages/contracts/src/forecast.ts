@@ -20,6 +20,9 @@ export const ForecastHourSchema = z.object({
   windSpeedKmh: z.number().nullable(),
   windDirection: z.number().nullable(),
   windCondition: WindConditionSchema.nullable(),
+  windWaveHeight: z.number().nullable(),
+  windWavePeriod: z.number().nullable(),
+  windWaveDirection: z.number().nullable(),
 });
 
 export const ForecastErrorSchema = z.object({

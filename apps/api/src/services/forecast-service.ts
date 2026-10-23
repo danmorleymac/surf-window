@@ -61,6 +61,7 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
       const windDirection = wind?.windDirection ?? null;
 
       const waveHeight = marineData.hourly.wave_height[index] ?? null;
+      const swellHeight = marineData.hourly.swell_wave_height[index] ?? null;
       const swellPeriod = marineData.hourly.swell_wave_period[index] ?? null;
 
       const windCondition =
@@ -71,9 +72,11 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
 
       const { score: surfScore, rating: surfRating } = getSurfScore({
         spotId: spot.id,
-        waveHeight,
+        swellHeight,
         swellPeriod,
         windCondition,
+        windSpeedKmh: wind?.windSpeedKmh ?? null,
+        windWaveHeight: marineData.hourly.wind_wave_height[index] ?? null,
       });
 
       return {
@@ -81,9 +84,12 @@ export async function getForecastForSpot(spot: SurfSpot): Promise<ForecastRespon
         secondarySwellHeight: marineData.hourly.secondary_swell_wave_height[index] ?? null,
         secondarySwellPeriod: marineData.hourly.secondary_swell_wave_period[index] ?? null,
         secondarySwellDirection: marineData.hourly.secondary_swell_wave_direction[index] ?? null,
-        swellHeight: marineData.hourly.swell_wave_height[index] ?? null,
+        swellHeight,
         swellPeriod,
         swellDirection: marineData.hourly.swell_wave_direction[index] ?? null,
+        windWaveHeight: marineData.hourly.wind_wave_height[index] ?? null,
+        windWavePeriod: marineData.hourly.wind_wave_period[index] ?? null,
+        windWaveDirection: marineData.hourly.wind_wave_direction[index] ?? null,
         waveHeight,
         wavePeriod: marineData.hourly.wave_period[index] ?? null,
         waveDirection: marineData.hourly.wave_direction[index] ?? null,

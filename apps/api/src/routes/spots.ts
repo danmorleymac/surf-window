@@ -4,7 +4,7 @@ import { getAllSpots } from "../db/queries/spots.js";
 import { SpotsResponseSchema } from "@surf-window/contracts";
 import { toFastifySchema } from "../schemas/to-fastify-schema.js";
 
-export function registerSpotRoutes(app: FastifyInstance): void {
+export function spotsRoutes(app: FastifyInstance): void {
   app.get(
     "/api/spots",
     {

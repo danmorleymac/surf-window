@@ -3,7 +3,6 @@ import { z } from "zod";
 
 import { getSpotById } from "../db/queries/spots";
 import { ForecastResponseSchema, ForecastErrorSchema } from "@surf-window/contracts";
-
 import { toFastifySchema } from "../schemas/to-fastify-schema";
 import { getForecastForSpot } from "../services/forecast-service";
 
@@ -11,7 +10,7 @@ const SpotParamsSchema = z.object({
   spotId: z.string(),
 });
 
-export function registerForecastRoutes(app: FastifyInstance): void {
+export function forecastRoutes(app: FastifyInstance): void {
   app.get<{
     Params: z.infer<typeof SpotParamsSchema>;
   }>(

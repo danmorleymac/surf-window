@@ -3,15 +3,39 @@ import { getSpotScoreAdjustments } from "./spot-score-adjustments.js";
 
 export type SurfScoreInput = {
   spotId: string;
-  waveHeight: number | null;
+  swellHeight: number | null;
   swellPeriod: number | null;
   windCondition: WindCondition | null;
+  windSpeedKmh: number | null;
+  windWaveHeight: number | null;
 };
 
 export type SurfScore = {
   score: number;
   rating: SurfRating;
 };
+
+function getWindSeaPenalty({
+  swellHeight,
+  windWaveHeight,
+  windSpeedKmh,
+}: Pick<SurfScoreInput, "swellHeight" | "windWaveHeight" | "windSpeedKmh">): number {
+  let penalty = 0;
+
+  if (windSpeedKmh !== null) {
+    if (windSpeedKmh >= 50) {
+      penalty -= 25;
+    } else if (windSpeedKmh >= 35) {
+      penalty -= 15;
+    }
+  }
+
+  if (swellHeight !== null && windWaveHeight !== null && windWaveHeight > swellHeight * 1.5) {
+    penalty -= 15;
+  }
+
+  return penalty;
+}
 
 function scoreWaveHeight(waveHeight: number | null) {
   if (waveHeight === null) return 0;
@@ -62,21 +86,31 @@ function getRating(score: number): SurfRating {
 
 export function getSurfScore({
   spotId,
-  waveHeight,
+  swellHeight,
   swellPeriod,
   windCondition,
+  windSpeedKmh,
+  windWaveHeight,
 }: SurfScoreInput): SurfScore {
   const baseScore =
-    scoreWaveHeight(waveHeight) + scoreSwellPeriod(swellPeriod) + scoreWindCondition(windCondition);
+    scoreWaveHeight(swellHeight) +
+    scoreSwellPeriod(swellPeriod) +
+    scoreWindCondition(windCondition);
 
   const adjustments = getSpotScoreAdjustments(spotId, {
     swellPeriod,
     windCondition,
   });
 
+  const windSeaPenalty = getWindSeaPenalty({
+    swellHeight,
+    windWaveHeight,
+    windSpeedKmh,
+  });
+
   const adjustmentScore = adjustments.reduce((total, adjustment) => total + adjustment.points, 0);
 
-  const score = Math.max(0, Math.min(100, baseScore + adjustmentScore));
+  const score = Math.max(0, Math.min(100, baseScore + adjustmentScore + windSeaPenalty));
 
   return {
     score,

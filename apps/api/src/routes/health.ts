@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { toFastifySchema } from "../schemas/to-fastify-schema";
 import { HealthResponseSchema } from "../schemas/health";
 
-export function registerHealthRoutes(app: FastifyInstance) {
+export function healthRoutes(app: FastifyInstance) {
   app.get(
     "/api/health",
     {
