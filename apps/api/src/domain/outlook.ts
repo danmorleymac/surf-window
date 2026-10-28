@@ -2,6 +2,7 @@ import type { ForecastHour, Spot } from "@surf-window/contracts";
 
 const DAYTIME_START_HOUR = 6;
 const DAYTIME_END_HOUR = 18;
+const DAILY_RECOMMENDATION_LIMIT = 5;
 
 export type DailyBestForecast = {
   date: string;
@@ -14,14 +15,9 @@ export type SpotDailyBest = {
   forecast: ForecastHour;
 };
 
-export type WeekendDates = {
-  saturday: string;
-  sunday: string;
-};
-
-export type WeekendOutlook = {
-  saturday: SpotDailyBest[];
-  sunday: SpotDailyBest[];
+export type DailyOutlook = {
+  date: string;
+  recommendations: SpotDailyBest[];
 };
 
 export function getBestForecastByDay(forecast: ForecastHour[]): DailyBestForecast[] {
@@ -80,39 +76,27 @@ export function deduplicateSpotDailyForecasts(forecasts: SpotDailyBest[]): SpotD
   });
 }
 
-export function getUpcomingWeekendDates(referenceDate: Date): WeekendDates {
-  const day = referenceDate.getUTCDay();
-  const daysUntilSaturday = (6 - day + 7) % 7;
+export function getDailyOutlook(forecasts: SpotDailyBest[]): DailyOutlook[] {
+  const forecastsByDate = new Map<string, SpotDailyBest[]>();
 
-  const saturday = new Date(referenceDate);
-  saturday.setUTCDate(referenceDate.getUTCDate() + daysUntilSaturday);
+  for (const item of forecasts) {
+    const existing = forecastsByDate.get(item.date) ?? [];
 
-  const sunday = new Date(saturday);
-  sunday.setUTCDate(saturday.getUTCDate() + 1);
+    existing.push(item);
+    forecastsByDate.set(item.date, existing);
+  }
 
-  return {
-    saturday: saturday.toISOString().slice(0, 10),
-    sunday: sunday.toISOString().slice(0, 10),
-  };
-}
+  return Array.from(forecastsByDate.entries())
+    .sort(([dateA], [dateB]) => dateA.localeCompare(dateB))
+    .map(([date, dailyForecasts]) => {
+      const ranked = rankSpotDailyForecasts(dailyForecasts);
+      const deduplicated = deduplicateSpotDailyForecasts(ranked);
 
-export function getWeekendOutlook(
-  forecasts: SpotDailyBest[],
-  weekendDates: WeekendDates
-): WeekendOutlook {
-  const saturday = forecasts.filter((item) => item.date === weekendDates.saturday);
+      const worthwhile = deduplicated.filter((item) => item.forecast.surfScore >= 50);
 
-  const sunday = forecasts.filter((item) => item.date === weekendDates.sunday);
-
-  return {
-    saturday: deduplicateSpotDailyForecasts(rankSpotDailyForecasts(saturday)),
-    sunday: deduplicateSpotDailyForecasts(rankSpotDailyForecasts(sunday)),
-  };
-}
-
-export function getBestOfWeek(forecasts: SpotDailyBest[], limit = 5): SpotDailyBest[] {
-  const ranked = rankSpotDailyForecasts(forecasts);
-  const deduplicated = deduplicateSpotDailyForecasts(ranked);
-
-  return deduplicated.slice(0, limit);
+      return {
+        date,
+        recommendations: worthwhile.slice(0, DAILY_RECOMMENDATION_LIMIT),
+      };
+    });
 }

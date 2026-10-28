@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const SurfRatingSchema = z.enum(["poor", "fair", "good", "excellent"]);
+export const SurfRatingSchema = z.enum(["very-poor", "poor", "fair", "good", "excellent"]);
 
 export type SurfRating = z.infer<typeof SurfRatingSchema>;
 

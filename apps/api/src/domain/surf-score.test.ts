@@ -31,7 +31,7 @@ describe("getSurfScore", () => {
 
     expect(result).toEqual({
       score: 10,
-      rating: "poor",
+      rating: "very-poor",
     });
   });
 
@@ -75,7 +75,7 @@ describe("getSurfScore", () => {
 
     expect(result).toEqual({
       score: 0,
-      rating: "poor",
+      rating: "very-poor",
     });
   });
 

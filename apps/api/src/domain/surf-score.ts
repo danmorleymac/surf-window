@@ -80,8 +80,9 @@ function getRating(score: number): SurfRating {
   if (score >= 80) return "excellent";
   if (score >= 65) return "good";
   if (score >= 50) return "fair";
+  if (score >= 20) return "poor";
 
-  return "poor";
+  return "very-poor";
 }
 
 export function getSurfScore({

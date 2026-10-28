@@ -1,16 +1,8 @@
 import type { OutlookRecommendation, OutlookResponse } from "@surf-window/contracts";
 
 import { getAllSpots } from "../db/queries/spots.js";
-import {
-  getBestForecastByDay,
-  getBestOfWeek,
-  getUpcomingWeekendDates,
-  getWeekendOutlook,
-  type SpotDailyBest,
-} from "../domain/outlook.js";
+import { getBestForecastByDay, getDailyOutlook, type SpotDailyBest } from "../domain/outlook.js";
 import { getForecastForSpot } from "./forecast-service.js";
-
-const WEEKEND_RECOMMENDATION_LIMIT = 5;
 
 function toOutlookRecommendation(item: SpotDailyBest): OutlookRecommendation {
   return {
@@ -60,27 +52,12 @@ export async function getOutlook(): Promise<OutlookResponse> {
     }))
   );
 
-  const weekendDates = getUpcomingWeekendDates(new Date());
-
-  const weekend = getWeekendOutlook(dailyForecasts, weekendDates);
-
-  const bestOfWeek = getBestOfWeek(dailyForecasts);
+  const days = getDailyOutlook(dailyForecasts);
 
   return {
-    weekend: [
-      {
-        date: weekendDates.saturday,
-        recommendations: weekend.saturday
-          .slice(0, WEEKEND_RECOMMENDATION_LIMIT)
-          .map(toOutlookRecommendation),
-      },
-      {
-        date: weekendDates.sunday,
-        recommendations: weekend.sunday
-          .slice(0, WEEKEND_RECOMMENDATION_LIMIT)
-          .map(toOutlookRecommendation),
-      },
-    ],
-    bestOfWeek: bestOfWeek.map(toOutlookRecommendation),
+    days: days.map((day) => ({
+      date: day.date,
+      recommendations: day.recommendations.map(toOutlookRecommendation),
+    })),
   };
 }

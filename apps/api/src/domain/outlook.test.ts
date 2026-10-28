@@ -2,12 +2,11 @@ import type { ForecastHour } from "@surf-window/contracts";
 import { describe, expect, it } from "vitest";
 
 import {
+  deduplicateSpotDailyForecasts,
   getBestForecastByDay,
-  getBestOfWeek,
-  getUpcomingWeekendDates,
-  getWeekendOutlook,
+  getDailyOutlook,
   rankSpotDailyForecasts,
-  SpotDailyBest,
+  type SpotDailyBest,
 } from "./outlook.js";
 
 function createForecastHour(time: string, surfScore: number): ForecastHour {
@@ -22,19 +21,19 @@ function createForecastHour(time: string, surfScore: number): ForecastHour {
     secondarySwellHeight: null,
     secondarySwellPeriod: null,
     secondarySwellDirection: null,
+    windWaveHeight: 1,
+    windWavePeriod: 8,
+    windWaveDirection: 270,
     windSpeedKmh: 10,
     windDirection: 270,
     windCondition: "offshore",
     tideState: null,
     surfScore,
-    surfRating: surfScore >= 65 ? "good" : "fair",
-    windWaveHeight: 1,
-    windWavePeriod: 8,
-    windWaveDirection: 270,
+    surfRating: surfScore >= 80 ? "excellent" : surfScore >= 65 ? "good" : "fair",
   };
 }
 
-describe("getBestForecastByDay", () => {
+describe("outlook", () => {
   it("returns the highest scoring daytime forecast for each day", () => {
     const forecast = [
       createForecastHour("2026-10-20T06:00", 60),
@@ -108,16 +107,7 @@ describe("getBestForecastByDay", () => {
     expect(result.map((item) => item.spot.id)).toEqual(["cromer", "croyde"]);
   });
 
-  it("returns the upcoming Saturday and Sunday", () => {
-    const result = getUpcomingWeekendDates(new Date("2026-10-19T12:00:00Z"));
-
-    expect(result).toEqual({
-      saturday: "2026-10-24",
-      sunday: "2026-10-25",
-    });
-  });
-
-  it("returns ranked Saturday and Sunday forecasts", () => {
+  it("groups recommendations by day and ranks each day", () => {
     const forecasts: SpotDailyBest[] = [
       {
         spot: {
@@ -127,8 +117,8 @@ describe("getBestForecastByDay", () => {
           latitude: 51.13,
           longitude: -4.24,
         },
-        date: "2026-10-24",
-        forecast: createForecastHour("2026-10-24T09:00", 70),
+        date: "2026-10-26",
+        forecast: createForecastHour("2026-10-26T09:00", 70),
       },
       {
         spot: {
@@ -138,8 +128,8 @@ describe("getBestForecastByDay", () => {
           latitude: 52.93,
           longitude: 1.3,
         },
-        date: "2026-10-24",
-        forecast: createForecastHour("2026-10-24T12:00", 80),
+        date: "2026-10-26",
+        forecast: createForecastHour("2026-10-26T12:00", 85),
       },
       {
         spot: {
@@ -149,25 +139,23 @@ describe("getBestForecastByDay", () => {
           latitude: 51.38,
           longitude: 1.45,
         },
-        date: "2026-10-25",
-        forecast: createForecastHour("2026-10-25T12:00", 65),
+        date: "2026-10-27",
+        forecast: createForecastHour("2026-10-27T12:00", 75),
       },
     ];
 
-    const result = getWeekendOutlook(forecasts, {
-      saturday: "2026-10-24",
-      sunday: "2026-10-25",
-    });
+    const result = getDailyOutlook(forecasts);
 
-    expect(result.saturday.map((item: SpotDailyBest) => item.spot.id)).toEqual([
-      "cromer",
-      "croyde",
-    ]);
+    expect(result).toHaveLength(2);
 
-    expect(result.sunday.map((item: SpotDailyBest) => item.spot.id)).toEqual(["joss-bay"]);
+    expect(result[0].date).toBe("2026-10-26");
+    expect(result[0].recommendations.map((item) => item.spot.id)).toEqual(["cromer", "croyde"]);
+
+    expect(result[1].date).toBe("2026-10-27");
+    expect(result[1].recommendations.map((item) => item.spot.id)).toEqual(["joss-bay"]);
   });
 
-  it("returns the highest scoring spot/day forecasts", () => {
+  it("returns days in date order", () => {
     const forecasts: SpotDailyBest[] = [
       {
         spot: {
@@ -177,8 +165,8 @@ describe("getBestForecastByDay", () => {
           latitude: 51.13,
           longitude: -4.24,
         },
-        date: "2026-10-20",
-        forecast: createForecastHour("2026-10-20T09:00", 70),
+        date: "2026-10-28",
+        forecast: createForecastHour("2026-10-28T09:00", 70),
       },
       {
         spot: {
@@ -188,24 +176,47 @@ describe("getBestForecastByDay", () => {
           latitude: 52.93,
           longitude: 1.3,
         },
-        date: "2026-10-21",
-        forecast: createForecastHour("2026-10-21T12:00", 82),
-      },
-      {
-        spot: {
-          id: "joss-bay",
-          name: "Joss Bay",
-          region: "Kent",
-          latitude: 51.38,
-          longitude: 1.45,
-        },
-        date: "2026-10-22",
-        forecast: createForecastHour("2026-10-22T12:00", 65),
+        date: "2026-10-26",
+        forecast: createForecastHour("2026-10-26T12:00", 80),
       },
     ];
 
-    const result = getBestOfWeek(forecasts, 2);
+    const result = getDailyOutlook(forecasts);
 
-    expect(result.map((item: SpotDailyBest) => item.spot.id)).toEqual(["cromer", "croyde"]);
+    expect(result.map((day) => day.date)).toEqual(["2026-10-26", "2026-10-28"]);
+  });
+
+  it("deduplicates equivalent recommendations within the same region", () => {
+    const forecast = createForecastHour("2026-10-26T12:00", 80);
+
+    const forecasts: SpotDailyBest[] = [
+      {
+        spot: {
+          id: "bournemouth-pier",
+          name: "Bournemouth Pier",
+          region: "Dorset",
+          latitude: 50.72,
+          longitude: -1.88,
+        },
+        date: "2026-10-26",
+        forecast,
+      },
+      {
+        spot: {
+          id: "boscombe",
+          name: "Boscombe",
+          region: "Dorset",
+          latitude: 50.72,
+          longitude: -1.84,
+        },
+        date: "2026-10-26",
+        forecast,
+      },
+    ];
+
+    const result = deduplicateSpotDailyForecasts(forecasts);
+
+    expect(result).toHaveLength(1);
+    expect(result[0].spot.id).toBe("bournemouth-pier");
   });
 });

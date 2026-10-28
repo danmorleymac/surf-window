@@ -20,8 +20,7 @@ export const OutlookDaySchema = z.object({
 });
 
 export const OutlookResponseSchema = z.object({
-  weekend: z.array(OutlookDaySchema),
-  bestOfWeek: z.array(OutlookRecommendationSchema),
+  days: z.array(OutlookDaySchema),
 });
 
 export type OutlookRecommendation = z.infer<typeof OutlookRecommendationSchema>;

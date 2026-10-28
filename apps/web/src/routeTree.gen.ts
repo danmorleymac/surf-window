@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ForecastRouteImport } from './routes/forecast'
 import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as ForecastSpotIdRouteImport } from './routes/forecast_.$spotId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,35 +29,44 @@ const SettingsRoute = SettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ForecastSpotIdRoute = ForecastSpotIdRouteImport.update({
+  id: '/forecast_/$spotId',
+  path: '/forecast/$spotId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/forecast': typeof ForecastRoute
   '/settings': typeof SettingsRoute
+  '/forecast/$spotId': typeof ForecastSpotIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/forecast': typeof ForecastRoute
   '/settings': typeof SettingsRoute
+  '/forecast/$spotId': typeof ForecastSpotIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/forecast': typeof ForecastRoute
   '/settings': typeof SettingsRoute
+  '/forecast_/$spotId': typeof ForecastSpotIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/forecast' | '/settings'
+  fullPaths: '/' | '/forecast' | '/settings' | '/forecast/$spotId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/forecast' | '/settings'
-  id: '__root__' | '/' | '/forecast' | '/settings'
+  to: '/' | '/forecast' | '/settings' | '/forecast/$spotId'
+  id: '__root__' | '/' | '/forecast' | '/settings' | '/forecast_/$spotId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ForecastRoute: typeof ForecastRoute
   SettingsRoute: typeof SettingsRoute
+  ForecastSpotIdRoute: typeof ForecastSpotIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -82,6 +92,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SettingsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/forecast_/$spotId': {
+      id: '/forecast_/$spotId'
+      path: '/forecast/$spotId'
+      fullPath: '/forecast/$spotId'
+      preLoaderRoute: typeof ForecastSpotIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,6 +106,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ForecastRoute: ForecastRoute,
   SettingsRoute: SettingsRoute,
+  ForecastSpotIdRoute: ForecastSpotIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
