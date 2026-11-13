@@ -13,6 +13,7 @@ export type SpotDailyBest = {
   spot: Spot;
   date: string;
   forecast: ForecastHour;
+  headlineForecast: ForecastHour;
 };
 
 export type DailyOutlook = {
@@ -99,4 +100,23 @@ export function getDailyOutlook(forecasts: SpotDailyBest[]): DailyOutlook[] {
         recommendations: worthwhile.slice(0, DAILY_RECOMMENDATION_LIMIT),
       };
     });
+}
+
+export function getHeadlineForecast(forecast: ForecastHour[]): ForecastHour | null {
+  const daytime = forecast.filter((item) => {
+    const hour = new Date(`${item.time}Z`).getUTCHours();
+
+    return hour >= DAYTIME_START_HOUR && hour <= DAYTIME_END_HOUR;
+  });
+
+  if (daytime.length === 0) {
+    return null;
+  }
+
+  return [...daytime].sort((a, b) => {
+    const hourA = new Date(`${a.time}Z`).getUTCHours();
+    const hourB = new Date(`${b.time}Z`).getUTCHours();
+
+    return Math.abs(hourA - 12) - Math.abs(hourB - 12);
+  })[0];
 }

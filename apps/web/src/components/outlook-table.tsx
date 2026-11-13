@@ -24,6 +24,30 @@ export function OutlookTable({ days }: OutlookTableProps) {
 
   return (
     <Stack gap={0}>
+      <Box
+        display="grid"
+        style={{
+          gridTemplateColumns: "140px 1fr 100px 160px 110px",
+          gap: "16px",
+          padding: "0 0 8px",
+        }}
+      >
+        <Text size="sm" fw={600} c="dimmed">
+          Day
+        </Text>
+        <Text size="sm" fw={600} c="dimmed">
+          Spot
+        </Text>
+        <Text size="sm" fw={600} c="dimmed">
+          Waves
+        </Text>
+        <Text size="sm" fw={600} c="dimmed">
+          Wind
+        </Text>
+        <Text size="sm" fw={600} c="dimmed">
+          Rating
+        </Text>
+      </Box>
       {days.map((day, dayIndex) => (
         <Box
           key={day.date}
@@ -58,7 +82,7 @@ export function OutlookTable({ days }: OutlookTableProps) {
                 <Text fw={500}>{recommendation.spot.name}</Text>
               </Link>
 
-              <Text>{formatHeight(recommendation.waveHeight, heightUnit)}</Text>
+              <Text>{formatHeight(recommendation.headlineWaveHeight, heightUnit)}</Text>
 
               <Text tt="capitalize">{recommendation.windCondition ?? "Unknown"}</Text>
 

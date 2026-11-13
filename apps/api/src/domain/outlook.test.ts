@@ -88,6 +88,7 @@ describe("outlook", () => {
         },
         date: "2026-10-20",
         forecast: createForecastHour("2026-10-20T09:00", 68),
+        headlineForecast: createForecastHour("2026-10-20T09:00", 68),
       },
       {
         spot: {
@@ -99,6 +100,7 @@ describe("outlook", () => {
         },
         date: "2026-10-20",
         forecast: createForecastHour("2026-10-20T12:00", 82),
+        headlineForecast: createForecastHour("2026-10-20T12:00", 82),
       },
     ];
 
@@ -119,6 +121,7 @@ describe("outlook", () => {
         },
         date: "2026-10-26",
         forecast: createForecastHour("2026-10-26T09:00", 70),
+        headlineForecast: createForecastHour("2026-10-26T09:00", 70),
       },
       {
         spot: {
@@ -130,6 +133,7 @@ describe("outlook", () => {
         },
         date: "2026-10-26",
         forecast: createForecastHour("2026-10-26T12:00", 85),
+        headlineForecast: createForecastHour("2026-10-26T12:00", 85),
       },
       {
         spot: {
@@ -141,6 +145,7 @@ describe("outlook", () => {
         },
         date: "2026-10-27",
         forecast: createForecastHour("2026-10-27T12:00", 75),
+        headlineForecast: createForecastHour("2026-10-27T12:00", 75),
       },
     ];
 
@@ -167,6 +172,7 @@ describe("outlook", () => {
         },
         date: "2026-10-28",
         forecast: createForecastHour("2026-10-28T09:00", 70),
+        headlineForecast: createForecastHour("2026-10-28T09:00", 70),
       },
       {
         spot: {
@@ -178,6 +184,7 @@ describe("outlook", () => {
         },
         date: "2026-10-26",
         forecast: createForecastHour("2026-10-26T12:00", 80),
+        headlineForecast: createForecastHour("2026-10-26T12:00", 80),
       },
     ];
 
@@ -188,6 +195,7 @@ describe("outlook", () => {
 
   it("deduplicates equivalent recommendations within the same region", () => {
     const forecast = createForecastHour("2026-10-26T12:00", 80);
+    const headlineForecast = createForecastHour("2026-10-26T12:00", 80);
 
     const forecasts: SpotDailyBest[] = [
       {
@@ -200,6 +208,7 @@ describe("outlook", () => {
         },
         date: "2026-10-26",
         forecast,
+        headlineForecast,
       },
       {
         spot: {
@@ -211,6 +220,7 @@ describe("outlook", () => {
         },
         date: "2026-10-26",
         forecast,
+        headlineForecast,
       },
     ];
 

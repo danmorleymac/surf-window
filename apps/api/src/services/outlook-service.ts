@@ -1,7 +1,12 @@
 import type { OutlookRecommendation, OutlookResponse } from "@surf-window/contracts";
 
 import { getAllSpots } from "../db/queries/spots.js";
-import { getBestForecastByDay, getDailyOutlook, type SpotDailyBest } from "../domain/outlook.js";
+import {
+  getBestForecastByDay,
+  getDailyOutlook,
+  getHeadlineForecast,
+  type SpotDailyBest,
+} from "../domain/outlook.js";
 import { getForecastForSpot } from "./forecast-service.js";
 
 function toOutlookRecommendation(item: SpotDailyBest): OutlookRecommendation {
@@ -17,7 +22,7 @@ function toOutlookRecommendation(item: SpotDailyBest): OutlookRecommendation {
     bestTime: item.forecast.time,
     surfScore: item.forecast.surfScore,
     surfRating: item.forecast.surfRating,
-    waveHeight: item.forecast.waveHeight,
+    headlineWaveHeight: item.headlineForecast.waveHeight,
     swellPeriod: item.forecast.swellPeriod,
     windCondition: item.forecast.windCondition,
   };
@@ -45,11 +50,24 @@ export async function getOutlook(): Promise<OutlookResponse> {
   });
 
   const dailyForecasts: SpotDailyBest[] = forecastsBySpot.flatMap(({ spot, response }) =>
-    getBestForecastByDay(response.forecast).map(({ date, forecast }) => ({
-      spot,
-      date,
-      forecast,
-    }))
+    getBestForecastByDay(response.forecast).flatMap(({ date, forecast }) => {
+      const dayForecast = response.forecast.filter((item) => item.time.slice(0, 10) === date);
+
+      const headlineForecast = getHeadlineForecast(dayForecast);
+
+      if (!headlineForecast) {
+        return [];
+      }
+
+      return [
+        {
+          spot,
+          date,
+          forecast,
+          headlineForecast,
+        },
+      ];
+    })
   );
 
   const days = getDailyOutlook(dailyForecasts);

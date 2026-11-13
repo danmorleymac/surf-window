@@ -9,7 +9,7 @@ export const OutlookRecommendationSchema = z.object({
   bestTime: z.string(),
   surfScore: z.number(),
   surfRating: SurfRatingSchema,
-  waveHeight: z.number().nullable(),
+  headlineWaveHeight: z.number().nullable(),
   swellPeriod: z.number().nullable(),
   windCondition: WindConditionSchema.nullable(),
 });
